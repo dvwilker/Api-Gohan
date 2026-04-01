@@ -22,11 +22,11 @@ Check out a live demo of NefuAPI
 ### Installation
 1. Clone the repository to your local machine:
    ```bash
-   git clone https://github.com/SoySapo6/NefuAPI/
+   git clone https://github.com/WILKER-OFC/Api-Cacaroto/
    ```
 2. Navigate to the project directory:
    ```bash
-   cd NefuAPI
+   cd Api-Cacaroto
    ```
 3. Install dependencies:
    ```bash
