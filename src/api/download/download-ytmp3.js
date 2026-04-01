@@ -66,39 +66,41 @@ class SaveTube {
   }
 }
 
-module.exports = async (req, res) => {
+module.exports = (req, res) => {
   const { url } = req.query;
   
   if (!url) {
     return res.status(400).json({ 
       status: false, 
-      creator: "wilker", 
+      creator: "dvwilker", 
       error: "Falta ?url=" 
     });
   }
 
-  try {
-    const st = new SaveTube();
-    const audio = await st.download(url, 'mp3');
+  (async () => {
+    try {
+      const st = new SaveTube();
+      const audio = await st.download(url, 'mp3');
 
-    if (!audio.status) {
-      return res.status(500).json(audio);
-    }
-
-    return res.json({
-      status: true,
-      creator: "wilker",
-      data: {
-        title: audio.title,
-        thumbnail: audio.thumb,
-        url: audio.dl
+      if (!audio.status) {
+        return res.status(500).json(audio);
       }
-    });
-  } catch (e) {
-    return res.status(500).json({ 
-      status: false, 
-      creator: "dvwilker", 
-      error: e.message 
-    });
-  }
+
+      return res.json({
+        status: true,
+        creator: "wilker",
+        data: {
+          title: audio.title,
+          thumbnail: audio.thumb,
+          url: audio.dl
+        }
+      });
+    } catch (e) {
+      return res.status(500).json({ 
+        status: false, 
+        creator: "dvwilker", 
+        error: e.message 
+      });
+    }
+  })();
 };
