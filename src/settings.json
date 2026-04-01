@@ -69,6 +69,16 @@
           "path": "/search/youtube?q="
         }
       ]
+    },
+    {
+      "name": "Download",
+      "items": [
+        {
+          "name": "YouTube MP3",
+          "desc": "Download YouTube videos as MP3 audio",
+          "path": "/download/ytaudio?url="
+        }
+      ]
     }
   ]
 }
