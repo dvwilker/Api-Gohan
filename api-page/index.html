@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="/src/icon.png" type="image/png">
-    <title id="pageTitle">API CACAROTO</title>
+    <title id="pageTitle">CACAROTO API</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"/>
     <style>
@@ -129,6 +129,37 @@
             display: flex;
             align-items: center;
             gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #f5f5f5;
+            padding: 6px 15px;
+            border-radius: 30px;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #2c2c2c;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #e5e5e5;
+            color: #dc3545;
         }
 
         .top-links {
@@ -271,6 +302,19 @@
             font-size: 18px;
             color: #666;
             margin-bottom: 40px;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .welcome-card h3 {
+            margin-bottom: 10px;
         }
 
         /* Status Page */
@@ -569,6 +613,14 @@
             .main-content {
                 padding: 20px 15px;
             }
+
+            .user-info {
+                padding: 4px 10px;
+            }
+
+            .user-name {
+                font-size: 11px;
+            }
         }
     </style>
 </head>
@@ -589,9 +641,13 @@
                 <span></span>
                 <span></span>
             </button>
-            <div class="api-name" id="apiName"></div>
+            <div class="api-name" id="apiName">CACAROTO API</div>
         </div>
         <div class="top-bar-right">
+            <div class="user-info" id="userInfo">
+                <span class="user-name" id="userName"></span>
+                <button class="logout-btn" id="logoutBtn">Cerrar sesión</button>
+            </div>
             <div class="top-links" id="topLinks"></div>
         </div>
     </div>
@@ -644,6 +700,24 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Check authentication
+        const currentUser = JSON.parse(localStorage.getItem('cacaroto_current_user'));
+        const session = JSON.parse(localStorage.getItem('cacaroto_session'));
+
+        if (!currentUser || !session) {
+            window.location.href = 'login.html';
+        }
+
+        // Display user name
+        document.getElementById('userName').textContent = currentUser.fullName;
+
+        // Logout function
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('cacaroto_session');
+            localStorage.removeItem('cacaroto_current_user');
+            window.location.href = 'login.html';
+        });
+
         let settings = {};
         let currentPage = 'home';
 
@@ -658,11 +732,10 @@
             try {
                 const response = await fetch('/src/settings.json');
                 settings = await response.json();
-                
-                document.getElementById('pageTitle').textContent = settings.name || 'API';
-                document.getElementById('apiName').textContent = settings.name || 'API';
-                document.getElementById('footerText').textContent = `Created by ${settings.apiSettings?.creator || 'Unknown'}`;
-                
+
+                document.getElementById('pageTitle').textContent = settings.name || 'CACAROTO API';
+                document.getElementById('footerText').textContent = `Created by ${settings.apiSettings?.creator || 'CACAROTO Team'}`;
+
                 // Top links
                 const topLinksContainer = document.getElementById('topLinks');
                 if (settings.links && settings.links.length > 0) {
@@ -681,7 +754,7 @@
                         topLinksContainer.appendChild(a);
                     });
                 }
-                
+
                 // Categories navigation
                 const categoriesNav = document.getElementById('categoriesNav');
                 if (settings.categories) {
@@ -704,40 +777,40 @@
             const menuToggle = document.getElementById('menuToggle');
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            
+
             menuToggle.addEventListener('click', () => {
                 menuToggle.classList.toggle('active');
                 sidebar.classList.toggle('active');
                 overlay.classList.toggle('active');
             });
-            
+
             overlay.addEventListener('click', () => {
                 menuToggle.classList.remove('active');
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
-            
+
             // Sidebar navigation
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const page = item.dataset.page;
                     const category = item.dataset.category;
-                    
+
                     document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
                     item.classList.add('active');
-                    
+
                     if (page === 'category') {
                         renderPage('category', category);
                     } else {
                         renderPage(page);
                     }
-                    
+
                     menuToggle.classList.remove('active');
                     sidebar.classList.remove('active');
                     overlay.classList.remove('active');
                 });
             });
-            
+
             // Scroll effect
             window.addEventListener('scroll', () => {
                 const topBar = document.querySelector('.top-bar');
@@ -752,7 +825,7 @@
         function renderPage(page, category = null) {
             currentPage = page;
             const content = document.getElementById('mainContent');
-            
+
             switch (page) {
                 case 'home':
                     renderHomePage(content);
@@ -770,27 +843,31 @@
         }
 
         function renderHomePage(container) {
-            const imageSrc = Array.isArray(settings.header.imageSrc) && settings.header.imageSrc.length > 0
+            const imageSrc = Array.isArray(settings.header?.imageSrc) && settings.header.imageSrc.length > 0
                 ? settings.header.imageSrc[Math.floor(Math.random() * settings.header.imageSrc.length)]
                 : '';
-            
+
             container.innerHTML = `
                 <div class="home-banner">
-                    ${imageSrc ? `<img src="${imageSrc}" alt="${settings.name}" style="max-width: ${settings.header.imageSize?.desktop || '40%'}">` : ''}
-                    <h1 class="home-title">${settings.name || 'API'}</h1>
+                    ${imageSrc ? `<img src="${imageSrc}" alt="${settings.name}" style="max-width: ${settings.header?.imageSize?.desktop || '40%'}">` : ''}
+                    <h1 class="home-title">${settings.name || 'CACAROTO API'}</h1>
                     <div class="home-version">${settings.version || 'v1.0'}</div>
                     <p class="home-description">${settings.description || 'API Documentation'}</p>
+                    <div class="welcome-card">
+                        <h3>👋 Bienvenido, ${currentUser.fullName}!</h3>
+                        <p>Has iniciado sesión correctamente en CACAROTO API</p>
+                    </div>
                 </div>
             `;
         }
 
         async function renderStatusPage(container) {
             container.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="spinner-border"></div></div>';
-            
+
             try {
                 const response = await fetch('/status');
                 const data = await response.json();
-                
+
                 container.innerHTML = `
                     <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 30px;">API Status</h2>
                     <div class="status-grid">
@@ -826,25 +903,6 @@
                             <div class="status-card-title">API Latency</div>
                             <div class="status-card-value">${data.api_latency_ms || 0}ms</div>
                         </div>
-                        <div class="status-card">
-                            <div class="status-card-title">CPU Cores</div>
-                            <div class="status-card-value">${data.system?.cores || 'N/A'}</div>
-                            <div class="status-card-small">${data.system?.cpu_model || ''}</div>
-                        </div>
-                        <div class="status-card">
-                            <div class="status-card-title">CPU Load</div>
-                            <div class="status-card-value">${data.system?.cpu_load_percent || 0}%</div>
-                        </div>
-                        <div class="status-card">
-                            <div class="status-card-title">RAM Usage</div>
-                            <div class="status-card-value">${data.system?.ram_used_gb || 0} GB</div>
-                            <div class="status-card-small">of ${data.system?.ram_total_gb || 0} GB</div>
-                        </div>
-                        <div class="status-card">
-                            <div class="status-card-title">Disk Usage</div>
-                            <div class="status-card-value">${data.system?.disk_used_gb || 0} GB</div>
-                            <div class="status-card-small">of ${data.system?.disk_total_gb || 0} GB</div>
-                        </div>
                     </div>
                 `;
             } catch (error) {
@@ -853,11 +911,11 @@
         }
 
         function renderCategoryPage(container, categoryName) {
-            const category = settings.categories.find(c => c.name === categoryName);
+            const category = settings.categories?.find(c => c.name === categoryName);
             if (!category) return;
-            
+
             const sortedItems = [...category.items].sort((a, b) => a.name.localeCompare(b.name));
-            
+
             container.innerHTML = `
                 <div class="search-box">
                     <input type="text" class="search-input" placeholder="Search endpoints..." id="searchInput">
@@ -869,7 +927,7 @@
                     </div>
                 </div>
             `;
-            
+
             setupSearch();
             setupEndpointButtons();
         }
@@ -881,21 +939,23 @@
                 </div>
                 <div id="allCategories"></div>
             `;
-            
+
             const allCategories = document.getElementById('allCategories');
-            settings.categories.forEach(category => {
-                const sortedItems = [...category.items].sort((a, b) => a.name.localeCompare(b.name));
-                
-                allCategories.innerHTML += `
-                    <div class="category-section" data-category="${category.name}">
-                        <h2 class="category-title">${category.name}</h2>
-                        <div class="endpoints-grid">
-                            ${sortedItems.map(item => createEndpointCard(item)).join('')}
+            if (settings.categories) {
+                settings.categories.forEach(category => {
+                    const sortedItems = [...category.items].sort((a, b) => a.name.localeCompare(b.name));
+
+                    allCategories.innerHTML += `
+                        <div class="category-section" data-category="${category.name}">
+                            <h2 class="category-title">${category.name}</h2>
+                            <div class="endpoints-grid">
+                                ${sortedItems.map(item => createEndpointCard(item)).join('')}
+                            </div>
                         </div>
-                    </div>
-                `;
-            });
-            
+                    `;
+                });
+            }
+
             setupSearch();
             setupEndpointButtons();
         }
@@ -917,19 +977,19 @@
         function setupSearch() {
             const searchInput = document.getElementById('searchInput');
             if (!searchInput) return;
-            
+
             searchInput.addEventListener('input', (e) => {
                 const term = e.target.value.toLowerCase();
                 const cards = document.querySelectorAll('.endpoint-card');
                 const sections = document.querySelectorAll('.category-section');
-                
+
                 cards.forEach(card => {
                     const name = card.dataset.name;
                     const desc = card.dataset.desc;
                     const matches = name.includes(term) || desc.includes(term);
                     card.style.display = matches ? '' : 'none';
                 });
-                
+
                 sections.forEach(section => {
                     const visibleCards = section.querySelectorAll('.endpoint-card:not([style*="display: none"])');
                     section.style.display = visibleCards.length > 0 ? '' : 'none';
@@ -944,7 +1004,7 @@
                     const name = btn.dataset.name;
                     const desc = btn.dataset.desc;
                     const innerDesc = btn.dataset.innerDesc;
-                    
+
                     openModal(path, name, desc, innerDesc);
                 });
             });
@@ -952,22 +1012,22 @@
 
         function openModal(path, name, desc, innerDesc) {
             const modal = new bootstrap.Modal(document.getElementById('apiModal'));
-            
+
             document.getElementById('modalTitle').textContent = name;
             document.getElementById('modalDesc').textContent = desc;
             document.getElementById('endpointBox').style.display = 'none';
             document.getElementById('paramsContainer').innerHTML = '';
             document.getElementById('responseContainer').innerHTML = '';
             document.getElementById('submitBtn').style.display = 'none';
-            
+
             const baseUrl = window.location.origin + path;
             const urlParts = path.split('?');
             const params = new URLSearchParams(urlParts[1] || '');
             const hasParams = Array.from(params.keys()).length > 0;
-            
+
             if (hasParams) {
                 const paramsContainer = document.getElementById('paramsContainer');
-                
+
                 Array.from(params.keys()).forEach(param => {
                     const input = document.createElement('input');
                     input.type = 'text';
@@ -977,18 +1037,18 @@
                     input.required = true;
                     paramsContainer.appendChild(input);
                 });
-                
+
                 if (innerDesc) {
                     const descDiv = document.createElement('div');
                     descDiv.className = 'inner-desc';
                     descDiv.innerHTML = innerDesc.replace(/\n/g, '<br>');
                     paramsContainer.appendChild(descDiv);
                 }
-                
+
                 const submitBtn = document.getElementById('submitBtn');
                 submitBtn.style.display = 'block';
                 submitBtn.disabled = true;
-                
+
                 paramsContainer.querySelectorAll('.param-input').forEach(input => {
                     input.addEventListener('input', () => {
                         const allInputs = paramsContainer.querySelectorAll('.param-input');
@@ -996,12 +1056,12 @@
                         submitBtn.disabled = !allFilled;
                     });
                 });
-                
+
                 submitBtn.onclick = () => {
                     const inputs = paramsContainer.querySelectorAll('.param-input');
                     const newParams = new URLSearchParams();
                     let isValid = true;
-                    
+
                     inputs.forEach(input => {
                         if (!input.value.trim()) {
                             isValid = false;
@@ -1011,9 +1071,9 @@
                             newParams.append(input.dataset.param, input.value.trim());
                         }
                     });
-                    
+
                     if (!isValid) return;
-                    
+
                     const fullUrl = `${window.location.origin}${urlParts[0]}?${newParams.toString()}`;
                     paramsContainer.innerHTML = '';
                     submitBtn.style.display = 'none';
@@ -1022,7 +1082,7 @@
             } else {
                 makeApiRequest(baseUrl);
             }
-            
+
             modal.show();
         }
 
@@ -1030,25 +1090,25 @@
             const endpointBox = document.getElementById('endpointBox');
             const loadingContainer = document.getElementById('loadingContainer');
             const responseContainer = document.getElementById('responseContainer');
-            
+
             endpointBox.textContent = url;
             endpointBox.style.display = 'block';
             loadingContainer.style.display = 'block';
             responseContainer.innerHTML = '';
-            
+
             try {
                 const response = await fetch(url);
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 const contentType = response.headers.get('Content-Type');
-                
+
                 if (contentType && contentType.startsWith('image/')) {
                     const blob = await response.blob();
                     const imageUrl = URL.createObjectURL(blob);
-                    
+
                     const img = document.createElement('img');
                     img.src = imageUrl;
                     img.className = 'response-image';
@@ -1073,11 +1133,11 @@
 
         function formatUptime(seconds) {
             if (!seconds) return 'N/A';
-            
+
             const days = Math.floor(seconds / 86400);
             const hours = Math.floor((seconds % 86400) / 3600);
             const minutes = Math.floor((seconds % 3600) / 60);
-            
+
             if (days > 0) return `${days}d ${hours}h`;
             if (hours > 0) return `${hours}h ${minutes}m`;
             return `${minutes}m`;
