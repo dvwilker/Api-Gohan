@@ -1,14 +1,5 @@
-const express = require("express");
 const axios = require("axios");
 const crypto = require("crypto");
-
-const endpoint = {
-  name: "YouTube Audio",
-  description: "Descarga videos de YouTube en formato MP3",
-  category: "Descargadores",
-  route: "/download/ytaudio",
-  params: [{ name: "url", description: "URL del video de YouTube" }]
-};
 
 class SaveTube {
   constructor() {
@@ -26,8 +17,8 @@ class SaveTube {
 
   async decrypt(enc) {
     try {
-      const [sr, ky] = [Buffer.from(enc,'base64'), Buffer.from(this.ky,'hex')];
-      const [iv, dt] = [sr.slice(0,16), sr.slice(16)];
+      const [sr, ky] = [Buffer.from(enc, 'base64'), Buffer.from(this.ky, 'hex')];
+      const [iv, dt] = [sr.slice(0, 16), sr.slice(16)];
       const dc = crypto.createDecipheriv('aes-128-cbc', ky, iv);
       return JSON.parse(Buffer.concat([dc.update(dt), dc.final()]).toString());
     } catch (e) {
@@ -75,35 +66,39 @@ class SaveTube {
   }
 }
 
-const router = (dependencies) => {
-  const { apiKeyAuth } = dependencies;
-  const router = express.Router();
+module.exports = async (req, res) => {
+  const { url } = req.query;
+  
+  if (!url) {
+    return res.status(400).json({ 
+      status: false, 
+      creator: "wilker", 
+      error: "Falta ?url=" 
+    });
+  }
 
-  router.get(endpoint.route, apiKeyAuth, async (req, res) => {
-    const { url } = req.query;
-    if (!url) return res.status(400).json({ status: false, creator: "Ado", error: "Falta ?url=" });
+  try {
+    const st = new SaveTube();
+    const audio = await st.download(url, 'mp3');
 
-    try {
-      const st = new SaveTube();
-      const audio = await st.download(url, 'mp3');
-
-      if (!audio.status) return res.status(500).json(audio);
-
-      return res.json({
-        status: true,
-        creator: "wilker",
-        data: {
-          title: audio.title,
-          thumbnail: audio.thumb,
-          url: audio.dl
-        }
-      });
-    } catch (e) {
-      return res.status(500).json({ status: false, creator: "Ado", error: e.message });
+    if (!audio.status) {
+      return res.status(500).json(audio);
     }
-  });
 
-  return router;
+    return res.json({
+      status: true,
+      creator: "wilker",
+      data: {
+        title: audio.title,
+        thumbnail: audio.thumb,
+        url: audio.dl
+      }
+    });
+  } catch (e) {
+    return res.status(500).json({ 
+      status: false, 
+      creator: "dvwilker", 
+      error: e.message 
+    });
+  }
 };
-
-module.exports = { endpoint, router };
