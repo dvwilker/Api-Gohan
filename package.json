@@ -21,7 +21,6 @@
     "https": "^1.0.0",
     "node-fetch": "^2.6.1",
     "yt-search": "^2.12.1",
-    "ytdl-core": "^4.11.5",
-    "fluent-ffmpeg": "^2.1.2"
+    "ytdl-core": "^4.11.5"
   }
 }
