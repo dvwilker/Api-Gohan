@@ -1,4 +1,4 @@
-![Logo](https://files.catbox.moe/wg9ysl.png)
+![Logo](https://files.catbox.moe/pnp8hg.jpg)
 
 A redesigned and upgraded edition of **Rynn UI** with a smoother user interface, optimized user experience, and extended API endpoint support.
 
@@ -41,7 +41,7 @@ Your API documentation should now be available at `http://localhost:<PORT>`.
 
 ### General Settings
 
-- `name`: Sets the name of your API (e.g., "MayAPI").
+- `name`: Sets the name of your API (e.g., "CacarotoAPI").
 - `version`: Specifies the version of your API interface (e.g., "1.0.0").
 - `description`: A brief description of your API documentation.
 
@@ -78,7 +78,7 @@ This project is created and maintained by:
 
 
 - **[Rynn](https://github.com/rynxzyy)**: Creator and main developer of the project.
-- **[SoyMaycol](https://github.com/SoySao6)**: API enhancer and maintainer. 
+- **[DVWILKER](https://github.com/WILKER-OFC)**: API enhancer and maintainer. 
 - **[Lenwy](https://github.com/Lenwyy)**: For the inspiration behind the project.
 - **[Siputzx](https://github.com/siputzx)**: For providing the LuminAI API.
 
