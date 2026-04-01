@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro - CACAROTO API</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+        }
+
+        .register-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .register-header {
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .register-header h2 {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .register-header p {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .register-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e5e5e5;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .form-control.is-invalid {
+            border-color: #dc3545;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+        }
+
+        .btn-register:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .switch-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .switch-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .switch-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .password-strength {
+            margin-top: 5px;
+            font-size: 12px;
+        }
+
+        .strength-weak {
+            color: #dc3545;
+        }
+
+        .strength-medium {
+            color: #ffc107;
+        }
+
+        .strength-strong {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-card">
+            <div class="register-header">
+                <h2>CACAROTO API</h2>
+                <p>Crear una nueva cuenta</p>
+            </div>
+            <div class="register-body">
+                <div class="error-message" id="errorMessage"></div>
+                <div class="success-message" id="successMessage"></div>
+                
+                <div class="form-group">
+                    <label>Nombre completo</label>
+                    <input type="text" class="form-control" id="fullName" placeholder="Ingresa tu nombre completo">
+                </div>
+                
+                <div class="form-group">
+                    <label>Correo electrónico</label>
+                    <input type="email" class="form-control" id="email" placeholder="tucorreo@ejemplo.com">
+                </div>
+                
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" class="form-control" id="password" placeholder="••••••••">
+                    <div class="password-strength" id="passwordStrength"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Confirmar contraseña</label>
+                    <input type="password" class="form-control" id="confirmPassword" placeholder="••••••••">
+                </div>
+                
+                <button class="btn-register" id="registerBtn">Crear cuenta</button>
+                
+                <div class="switch-link">
+                    ¿Ya tienes una cuenta? <a href="login.html">Iniciar sesión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registerBtn').addEventListener('click', registerUser);
+        document.getElementById('password').addEventListener('input', checkPasswordStrength);
+
+        function checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+            const strengthDiv = document.getElementById('passwordStrength');
+            
+            if (password.length === 0) {
+                strengthDiv.innerHTML = '';
+                return;
+            }
+            
+            let strength = 0;
+            if (password.length >= 6) strength++;
+            if (password.length >= 10) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            let strengthText = '';
+            let strengthClass = '';
+            
+            if (strength <= 2) {
+                strengthText = 'Débil';
+                strengthClass = 'strength-weak';
+            } else if (strength <= 4) {
+                strengthText = 'Media';
+                strengthClass = 'strength-medium';
+            } else {
+                strengthText = 'Fuerte';
+                strengthClass = 'strength-strong';
+            }
+            
+            strengthDiv.innerHTML = `Fortaleza: <span class="${strengthClass}">${strengthText}</span>`;
+        }
+
+        function registerUser() {
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+            
+            if (!fullName || !email || !password || !confirmPassword) {
+                showError('Por favor completa todos los campos');
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('Por favor ingresa un correo electrónico válido');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showError('La contraseña debe tener al menos 6 caracteres');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showError('Las contraseñas no coinciden');
+                return;
+            }
+            
+            // Get existing users or create new array
+            let users = JSON.parse(localStorage.getItem('cacaroto_users') || '[]');
+            
+            // Check if email already exists
+            if (users.some(user => user.email === email)) {
+                showError('Este correo electrónico ya está registrado');
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                id: Date.now(),
+                fullName: fullName,
+                email: email,
+                password: password,
+                createdAt: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('cacaroto_users', JSON.stringify(users));
+            
+            successDiv.textContent = '¡Cuenta creada exitosamente! Redirigiendo al login...';
+            successDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 2000);
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
