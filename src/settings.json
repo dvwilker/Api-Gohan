@@ -1,5 +1,5 @@
 {
-  "name": "NefuAPI's",
+  "name": "Cacaroto'Api",
   "version": "1.0.2",
   "description": "Todo lo que imaginas, un request de distancia.",
   "header": {
@@ -20,11 +20,11 @@
   "links": [
     {
       "name": "Source Code",
-      "url": "https://github.com/SoySapo6/NefuAPI/"
+      "url": "github"
     },
     {
       "name": "Contact Me",
-      "url": "https://wa.me/51921826291"
+      "url": "https://wa.me/584125877491"
     }
   ],
   "categories": [
