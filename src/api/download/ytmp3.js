@@ -1,89 +1,123 @@
 const axios = require('axios');
+const cheerio = require('cheerio');
 
 module.exports = function(app) {
     
-    // Función para limpiar URL de TikTok
-    function cleanTikTokUrl(url) {
-        // Eliminar parámetros innecesarios
-        url = url.split('?')[0];
-        // Reemplazar vm.tiktok.com con tiktok.com
-        if (url.includes('vm.tiktok.com')) {
-            return url;
+    // Función para extraer ID de YouTube
+    function extractVideoId(url) {
+        const patterns = [
+            /(?:youtube\.com\/watch\?v=)([^&]+)/,
+            /(?:youtu\.be\/)([^?]+)/,
+            /(?:youtube\.com\/shorts\/)([^?]+)/,
+            /(?:youtube\.com\/embed\/)([^?]+)/
+        ];
+        
+        for (const pattern of patterns) {
+            const match = url.match(pattern);
+            if (match) return match[1];
         }
-        return url;
+        return null;
     }
 
-    // Función principal para descargar TikTok sin watermark
-    async function downloadTikTok(url) {
+    // Función para descargar de ytdown
+    async function downloadFromYtDown(url) {
         try {
-            // Usar API pública de TikWM
-            const response = await axios.post('https://tikwm.com/api/', 
-                new URLSearchParams({
-                    url: url,
-                    count: 12,
-                    cursor: 0,
-                    web: 1,
-                    hd: 1
-                }), {
+            // Paso 1: Obtener la página principal con cookies
+            const mainPage = await axios.get('https://app.ytdown.to/es23/', {
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+                    'Accept-Language': 'es-ES,es;q=0.9,en;q=0.8',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    'Referer': 'https://app.ytdown.to/',
+                    'Origin': 'https://app.ytdown.to',
+                    'Sec-Ch-Ua': '"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
+                    'Sec-Ch-Ua-Mobile': '?0',
+                    'Sec-Ch-Ua-Platform': '"Windows"',
+                    'Sec-Fetch-Dest': 'document',
+                    'Sec-Fetch-Mode': 'navigate',
+                    'Sec-Fetch-Site': 'same-origin',
+                    'Upgrade-Insecure-Requests': '1'
                 }
             });
             
-            if (response.data && response.data.code === 0) {
-                const data = response.data.data;
-                return {
-                    success: true,
-                    result: {
-                        id: data.id,
-                        title: data.title,
-                        description: data.title,
-                        duration: data.duration,
-                        create_time: data.create_time,
-                        region: data.region,
-                        author: {
-                            id: data.author.id,
-                            unique_id: data.author.unique_id,
-                            nickname: data.author.nickname,
-                            avatar: data.author.avatar
-                        },
-                        music: {
-                            id: data.music.id,
-                            title: data.music.title,
-                            author: data.music.author,
-                            duration: data.music.duration,
-                            play_url: data.music.play_url
-                        },
-                        video: {
-                            no_watermark: data.play,
-                            watermark: data.wmplay,
-                            cover: data.cover,
-                            dynamic_cover: data.dynamic_cover,
-                            origin_cover: data.origin_cover,
-                            width: data.width,
-                            height: data.height
-                        },
-                        statistics: {
-                            play_count: data.play_count,
-                            digg_count: data.digg_count,
-                            comment_count: data.comment_count,
-                            share_count: data.share_count,
-                            download_count: data.download_count
-                        }
-                    }
-                };
-            } else {
-                throw new Error('Failed to fetch TikTok video');
+            // Extraer cookies
+            const cookies = mainPage.headers['set-cookie'];
+            let cookieString = '';
+            if (cookies) {
+                cookieString = cookies.map(c => c.split(';')[0]).join('; ');
             }
+            
+            // Extraer token CSRF si existe
+            const $ = cheerio.load(mainPage.data);
+            let csrfToken = '';
+            const metaCsrf = $('meta[name="csrf-token"]').attr('content');
+            if (metaCsrf) csrfToken = metaCsrf;
+            
+            // Paso 2: Enviar URL para obtener información del video
+            const formData = new URLSearchParams();
+            formData.append('url', url);
+            
+            const infoResponse = await axios.post('https://app.ytdown.to/es23/api/info', formData, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json',
+                    'Referer': 'https://app.ytdown.to/es23/',
+                    'Origin': 'https://app.ytdown.to',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Cookie': cookieString,
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            });
+            
+            if (!infoResponse.data || infoResponse.data.status !== 'success') {
+                throw new Error(infoResponse.data?.message || 'Failed to get video info');
+            }
+            
+            const videoData = infoResponse.data;
+            
+            // Paso 3: Obtener URL de descarga MP3
+            const downloadFormData = new URLSearchParams();
+            downloadFormData.append('video_id', videoData.video_id);
+            downloadFormData.append('type', 'mp3');
+            downloadFormData.append('quality', '128');
+            
+            const downloadResponse = await axios.post('https://app.ytdown.to/es23/api/download', downloadFormData, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': 'application/json',
+                    'Referer': 'https://app.ytdown.to/es23/',
+                    'Origin': 'https://app.ytdown.to',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Cookie': cookieString,
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            });
+            
+            if (!downloadResponse.data || downloadResponse.data.status !== 'success') {
+                throw new Error('Failed to get download URL');
+            }
+            
+            return {
+                success: true,
+                title: videoData.title,
+                thumbnail: videoData.thumbnail,
+                duration: videoData.duration,
+                author: videoData.author,
+                video_id: videoData.video_id,
+                download_url: downloadResponse.data.download_url
+            };
+            
         } catch (error) {
-            console.error('Error downloading TikTok:', error.message);
-            throw new Error(`TikTok download failed: ${error.message}`);
+            console.error('YtDown error:', error.response?.data || error.message);
+            throw new Error(`Download failed: ${error.message}`);
         }
     }
 
     // Endpoint principal
-    app.get('/download/tiktok', async (req, res) => {
+    app.get('/download/ytmp3', async (req, res) => {
         try {
             const { url } = req.query;
             
@@ -91,120 +125,76 @@ module.exports = function(app) {
                 return res.status(400).json({ 
                     status: false, 
                     error: 'URL parameter is required',
-                    message: 'Please provide a TikTok video URL'
+                    message: 'Please provide a YouTube URL'
                 });
             }
-
-            // Limpiar URL
-            const cleanUrl = cleanTikTokUrl(url);
+            
+            // Validar URL de YouTube
+            const videoId = extractVideoId(url);
+            if (!videoId) {
+                return res.status(400).json({ 
+                    status: false, 
+                    error: 'Invalid YouTube URL',
+                    message: 'Please provide a valid YouTube URL'
+                });
+            }
             
             // Si se solicita descarga directa
             if (req.query.download === 'true') {
                 try {
-                    // Primero obtener información del video
-                    const videoData = await downloadTikTok(cleanUrl);
+                    const result = await downloadFromYtDown(`https://youtube.com/watch?v=${videoId}`);
                     
-                    if (!videoData.success || !videoData.result.video.no_watermark) {
-                        throw new Error('No video URL found');
+                    if (!result.download_url) {
+                        throw new Error('No download URL found');
                     }
                     
-                    const videoUrl = videoData.result.video.no_watermark;
-                    const author = videoData.result.author.unique_id;
-                    const videoId = videoData.result.id;
-                    
-                    // Descargar y transmitir el video
-                    const response = await axios({
-                        method: 'GET',
-                        url: videoUrl,
-                        responseType: 'stream',
-                        headers: {
-                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-                        }
-                    });
-                    
-                    // Configurar headers para descarga
-                    res.header('Content-Disposition', `attachment; filename="tiktok_${author}_${videoId}.mp4"`);
-                    res.header('Content-Type', 'video/mp4');
-                    
-                    // Transmitir el video
-                    response.data.pipe(res);
+                    // Redirigir a la URL de descarga
+                    return res.redirect(result.download_url);
                     
                 } catch (streamError) {
-                    console.error('Stream error:', streamError);
-                    res.status(500).json({ 
+                    console.error('Download error:', streamError);
+                    return res.status(500).json({ 
                         status: false, 
-                        error: 'Failed to stream video',
+                        error: 'Failed to get download URL',
                         message: streamError.message
                     });
                 }
-                
-            } else {
-                // Obtener información del video sin descargar
-                const videoData = await downloadTikTok(cleanUrl);
-                
-                if (!videoData.success) {
-                    throw new Error('Failed to fetch video information');
-                }
-                
-                const data = videoData.result;
-                
-                res.status(200).json({
-                    status: true,
-                    creator: "DVWILKER",
-                    result: {
-                        video_id: data.id,
-                        title: data.title,
-                        description: data.description,
-                        duration: data.duration,
-                        duration_formatted: formatDuration(data.duration),
-                        region: data.region,
-                        created_at: new Date(data.create_time * 1000).toISOString(),
-                        author: {
-                            username: data.author.unique_id,
-                            nickname: data.author.nickname,
-                            avatar: data.author.avatar,
-                            profile_url: `https://www.tiktok.com/@${data.author.unique_id}`
-                        },
-                        music: {
-                            title: data.music.title,
-                            author: data.music.author,
-                            duration: data.music.duration,
-                            url: data.music.play_url
-                        },
-                        video: {
-                            no_watermark_url: data.video.no_watermark,
-                            watermark_url: data.video.watermark,
-                            thumbnail: data.video.cover,
-                            width: data.video.width,
-                            height: data.video.height
-                        },
-                        statistics: {
-                            views: data.statistics.play_count,
-                            likes: data.statistics.digg_count,
-                            comments: data.statistics.comment_count,
-                            shares: data.statistics.share_count,
-                            downloads: data.statistics.download_count
-                        },
-                        download_url: `/download/tiktok?url=${encodeURIComponent(url)}&download=true`
-                    }
-                });
             }
-
+            
+            // Obtener información del video
+            const result = await downloadFromYtDown(`https://youtube.com/watch?v=${videoId}`);
+            
+            // Formatear duración
+            let durationFormatted = result.duration || '0:00';
+            if (typeof result.duration === 'number') {
+                const minutes = Math.floor(result.duration / 60);
+                const seconds = result.duration % 60;
+                durationFormatted = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            res.status(200).json({
+                status: true,
+                creator: "DVWILKER",
+                result: {
+                    title: result.title,
+                    author: result.author,
+                    video_id: result.video_id,
+                    duration: result.duration,
+                    duration_formatted: durationFormatted,
+                    thumbnail: result.thumbnail,
+                    quality: "128kbps",
+                    format: "MP3",
+                    download_url: `/download/ytmp3?url=https://youtube.com/watch?v=${videoId}&download=true`
+                }
+            });
+            
         } catch (error) {
-            console.error('Error in TikTok endpoint:', error);
+            console.error('Error in ytmp3 endpoint:', error);
             res.status(500).json({ 
                 status: false, 
                 error: error.message || 'Internal server error',
-                message: 'Failed to process TikTok video'
+                message: 'Failed to process YouTube video. Please try again later.'
             });
         }
     });
-    
-    // Función auxiliar para formatear duración
-    function formatDuration(seconds) {
-        if (!seconds) return '0:00';
-        const minutes = Math.floor(seconds / 60);
-        const secs = seconds % 60;
-        return `${minutes}:${secs.toString().padStart(2, '0')}`;
-    }
 };
