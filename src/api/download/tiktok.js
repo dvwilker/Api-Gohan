@@ -7,57 +7,35 @@ module.exports = function(app) {
         const { url } = req.query
 
         if (!url) {
-            return res.status(400).json({
-                status: false,
-                error: 'URL is required'
-            })
+            return res.status(400).json({ status: false })
         }
 
         try {
-            // API pública para quitar marca de agua
-            const api = `https://tikwm.com/api/?url=${encodeURIComponent(url)}`
-            const { data } = await axios.get(api)
+            const { data } = await axios.get(`https://www.tikwm.com/api/?url=${url}`)
 
-            if (!data || !data.data || !data.data.play) {
-                return res.status(500).json({
-                    status: false,
-                    error: 'No se pudo obtener el video'
-                })
-            }
+            const video = data?.data?.play
 
-            const videoUrl = data.data.play
+            if (!video) throw new Error('No video')
 
-            const fileName = `${Date.now()}_tiktok.mp4`
-            const filePath = path.join(__dirname, '../../../download', fileName)
+            const filePath = path.join(__dirname, '../../../download', `${Date.now()}.mp4`)
 
             const response = await axios({
-                url: videoUrl,
+                url: video,
                 method: 'GET',
                 responseType: 'stream'
             })
 
             const writer = fs.createWriteStream(filePath)
-
             response.data.pipe(writer)
 
             writer.on('finish', () => {
-                res.download(filePath, fileName, () => {
-                    fs.unlink(filePath, () => {}) // borrar después
+                res.download(filePath, 'tiktok.mp4', () => {
+                    fs.unlink(filePath, () => {})
                 })
             })
 
-            writer.on('error', (err) => {
-                res.status(500).json({
-                    status: false,
-                    error: err.message
-                })
-            })
-
-        } catch (err) {
-            res.status(500).json({
-                status: false,
-                error: err.message
-            })
+        } catch (e) {
+            res.status(500).json({ status: false, error: 'TikTok failed' })
         }
     })
 }
