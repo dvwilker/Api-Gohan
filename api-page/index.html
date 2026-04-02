@@ -896,6 +896,12 @@
             currentPage = page;
             const content = document.getElementById('mainContent');
 
+            // Detener el intervalo de uptime si estamos saliendo de status
+            if (page !== 'status' && uptimeInterval) {
+                clearInterval(uptimeInterval);
+                uptimeInterval = null;
+            }
+
             switch (page) {
                 case 'home':
                     renderHomePage(content);
@@ -947,16 +953,12 @@
                     </div>
                     <div class="status-card">
                         <div class="status-card-title">Version</div>
-                        <div class="status-card-value">${settings.version || 'N/A'}</div>
+                        <div class="status-card-value" id="statusVersion">${settings.version || 'N/A'}</div>
                     </div>
                     <div class="status-card">
                         <div class="status-card-title">UPTIME</div>
                         <div class="status-card-value uptime-value" id="uptimeDisplay">0d 0h 0m 0s</div>
                         <div class="uptime-seconds" id="uptimeSeconds">0 segundos activo</div>
-                    </div>
-                    <div class="status-card">
-                        <div class="status-card-title">Routes Loaded</div>
-                        <div class="status-card-value" id="routesLoaded">--</div>
                     </div>
                     <div class="status-card">
                         <div class="status-card-title">Total Requests</div>
@@ -967,8 +969,21 @@
                         <div class="status-card-value" id="activeUsers">--</div>
                     </div>
                     <div class="status-card">
+                        <div class="status-card-title">Daily Limit</div>
+                        <div class="status-card-value" id="dailyLimit">--</div>
+                    </div>
+                    <div class="status-card">
+                        <div class="status-card-title">Routes Loaded</div>
+                        <div class="status-card-value" id="routesLoaded">--</div>
+                    </div>
+                    <div class="status-card">
                         <div class="status-card-title">API Latency</div>
                         <div class="status-card-value" id="apiLatency">--ms</div>
+                    </div>
+                    <div class="status-card">
+                        <div class="status-card-title">CPU Cores</div>
+                        <div class="status-card-value" id="cpuCores">--</div>
+                        <div class="status-card-small" id="cpuModel"></div>
                     </div>
                     <div class="status-card">
                         <div class="status-card-title">CPU Load</div>
@@ -977,37 +992,48 @@
                     <div class="status-card">
                         <div class="status-card-title">RAM Usage</div>
                         <div class="status-card-value" id="ramUsage">-- GB</div>
+                        <div class="status-card-small" id="ramTotal">of -- GB</div>
+                    </div>
+                    <div class="status-card">
+                        <div class="status-card-title">Disk Usage</div>
+                        <div class="status-card-value" id="diskUsage">-- GB</div>
+                        <div class="status-card-small" id="diskTotal">of -- GB</div>
                     </div>
                 </div>
             `;
 
-            // Start uptime counter (incrementa cada segundo)
-            if (uptimeInterval) clearInterval(uptimeInterval);
-            
-            // Obtener uptime inicial del servidor (si está disponible)
+            // Obtener datos del servidor
             try {
                 const response = await fetch('/status');
                 const data = await response.json();
+                
+                // Actualizar todos los datos
                 uptimeSeconds = data.uptime_seconds || 0;
-                document.getElementById('routesLoaded').textContent = data.routes_loaded || 0;
                 document.getElementById('totalRequests').textContent = data.total_requests || 0;
                 document.getElementById('activeUsers').textContent = data.active_users || 0;
+                document.getElementById('dailyLimit').textContent = data.daily_limit || 'N/A';
+                document.getElementById('routesLoaded').textContent = data.routes_loaded || 0;
                 document.getElementById('apiLatency').textContent = `${data.api_latency_ms || 0}ms`;
+                document.getElementById('cpuCores').textContent = data.system?.cores || 'N/A';
+                document.getElementById('cpuModel').textContent = data.system?.cpu_model || '';
                 document.getElementById('cpuLoad').textContent = `${data.system?.cpu_load_percent || 0}%`;
                 document.getElementById('ramUsage').textContent = `${data.system?.ram_used_gb || 0} GB`;
+                document.getElementById('ramTotal').textContent = `of ${data.system?.ram_total_gb || 0} GB`;
+                document.getElementById('diskUsage').textContent = `${data.system?.disk_used_gb || 0} GB`;
+                document.getElementById('diskTotal').textContent = `of ${data.system?.disk_total_gb || 0} GB`;
+                
             } catch (error) {
                 console.error('Error fetching status:', error);
-                uptimeSeconds = Math.floor(Date.now() / 1000) - (sessionStorage.getItem('api_start_time') || Date.now() / 1000);
-            }
-
-            // Si no hay uptime del servidor, usar tiempo desde que se cargó la página
-            if (!uptimeSeconds || uptimeSeconds === 0) {
-                if (!sessionStorage.getItem('api_start_time')) {
-                    sessionStorage.setItem('api_start_time', Date.now() / 1000);
+                // Si no hay respuesta del servidor, usar valores por defecto
+                if (!uptimeSeconds || uptimeSeconds === 0) {
+                    if (!sessionStorage.getItem('api_start_time')) {
+                        sessionStorage.setItem('api_start_time', Date.now() / 1000);
+                    }
+                    uptimeSeconds = Math.floor(Date.now() / 1000) - parseFloat(sessionStorage.getItem('api_start_time'));
                 }
-                uptimeSeconds = Math.floor(Date.now() / 1000) - parseFloat(sessionStorage.getItem('api_start_time'));
             }
 
+            // Iniciar el contador de uptime en tiempo real
             updateUptimeDisplay();
             
             uptimeInterval = setInterval(() => {
@@ -1043,12 +1069,6 @@
         }
 
         function renderCategoryPage(container, categoryName) {
-            // Detener el intervalo de uptime si estaba corriendo
-            if (uptimeInterval) {
-                clearInterval(uptimeInterval);
-                uptimeInterval = null;
-            }
-            
             const category = settings.categories?.find(c => c.name === categoryName);
             if (!category) return;
 
@@ -1071,12 +1091,6 @@
         }
 
         function renderAllEndpoints(container) {
-            // Detener el intervalo de uptime si estaba corriendo
-            if (uptimeInterval) {
-                clearInterval(uptimeInterval);
-                uptimeInterval = null;
-            }
-            
             container.innerHTML = `
                 <div class="search-box">
                     <input type="text" class="search-input" placeholder="Search endpoints..." id="searchInput">
