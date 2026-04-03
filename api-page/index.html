@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/src/icon.png" type="image/png">
-    <title id="pageTitle">CACAROTO API</title>
+    <title>CACAROTO API</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"/>
     <style>
@@ -21,38 +20,158 @@
             overflow-x: hidden;
         }
 
-        body.no-scroll {
-            overflow: hidden;
-        }
-
-        /* Loading Screen */
-        #loadingScreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #ffffff;
-            z-index: 10000;
+        /* Login/Register Styles */
+        .auth-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-            transition: opacity 0.5s ease;
+            padding: 20px;
         }
 
-        #loadingScreen.fade-out {
-            opacity: 0;
+        .auth-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 450px;
+            width: 100%;
+            overflow: hidden;
+            animation: slideUp 0.5s ease;
         }
 
-        .spinner-border {
-            width: 3rem;
-            height: 3rem;
-            border: 3px solid #f0f0f0;
-            border-top-color: #2c2c2c;
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* Top Bar */
+        .auth-header {
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .auth-header h2 {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .auth-header p {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .auth-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e5e5e5;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+        }
+
+        .switch-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .switch-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .password-strength {
+            margin-top: 5px;
+            font-size: 12px;
+        }
+        .strength-weak { color: #dc3545; }
+        .strength-medium { color: #ffc107; }
+        .strength-strong { color: #28a745; }
+
+        /* API Dashboard Styles (cuando está logueado) */
+        .dashboard-container {
+            display: none;
+        }
+
+        .dashboard-container.active {
+            display: block;
+        }
+
         .top-bar {
             position: fixed;
             top: 0;
@@ -66,17 +185,6 @@
             justify-content: space-between;
             padding: 0 20px;
             z-index: 1000;
-            transition: all 0.3s ease;
-        }
-
-        .top-bar.scrolled {
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .top-bar-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
         }
 
         .menu-toggle {
@@ -90,13 +198,6 @@
             justify-content: center;
             align-items: center;
             gap: 5px;
-            padding: 0;
-            transition: all 0.3s ease;
-        }
-
-        .menu-toggle:hover {
-            background: #f5f5f5;
-            border-radius: 5px;
         }
 
         .menu-toggle span {
@@ -110,11 +211,7 @@
         .menu-toggle.active span:nth-child(1) {
             transform: rotate(45deg) translate(5px, 5px);
         }
-
-        .menu-toggle.active span:nth-child(2) {
-            opacity: 0;
-        }
-
+        .menu-toggle.active span:nth-child(2) { opacity: 0; }
         .menu-toggle.active span:nth-child(3) {
             transform: rotate(-45deg) translate(7px, -6px);
         }
@@ -122,13 +219,6 @@
         .api-name {
             font-size: 18px;
             font-weight: 600;
-            color: #2c2c2c;
-        }
-
-        .top-bar-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
         }
 
         .user-info {
@@ -140,55 +230,14 @@
             border-radius: 30px;
         }
 
-        .user-name {
-            font-size: 13px;
-            font-weight: 500;
-            color: #2c2c2c;
-        }
-
         .logout-btn {
             background: none;
             border: none;
-            color: #666;
+            color: #dc3545;
             font-size: 12px;
             cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
         }
 
-        .logout-btn:hover {
-            background: #e5e5e5;
-            color: #dc3545;
-        }
-
-        .top-links {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .top-link {
-            color: #2c2c2c;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .top-link:hover {
-            color: #666;
-        }
-
-        .link-icon {
-            width: 16px;
-            height: 16px;
-        }
-
-        /* Sidebar */
         .sidebar {
             position: fixed;
             top: 60px;
@@ -197,14 +246,12 @@
             height: calc(100vh - 60px);
             background: #ffffff;
             border-right: 1px solid #e5e5e5;
-            overflow-y: auto;
             transition: left 0.3s ease;
             z-index: 999;
+            overflow-y: auto;
         }
 
-        .sidebar.active {
-            left: 0;
-        }
+        .sidebar.active { left: 0; }
 
         .sidebar-overlay {
             position: fixed;
@@ -224,24 +271,13 @@
             visibility: visible;
         }
 
-        .sidebar-nav {
-            padding: 20px 0;
-        }
-
         .sidebar-item {
             padding: 12px 20px;
-            color: #2c2c2c;
             cursor: pointer;
-            transition: all 0.2s ease;
             border-left: 3px solid transparent;
-            font-size: 14px;
-            font-weight: 500;
         }
 
-        .sidebar-item:hover {
-            background: #f5f5f5;
-        }
-
+        .sidebar-item:hover { background: #f5f5f5; }
         .sidebar-item.active {
             background: #f5f5f5;
             border-left-color: #2c2c2c;
@@ -253,77 +289,21 @@
             font-weight: 600;
             color: #999;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        /* Main Content */
         .main-content {
             margin-top: 60px;
             padding: 40px 20px;
             max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
-            min-height: calc(100vh - 120px);
         }
 
-        /* Home Page */
-        .home-banner {
-            text-align: center;
-            padding: 40px 20px;
-            animation: fadeIn 0.6s ease;
-        }
-
-        .home-banner img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin-bottom: 30px;
-        }
-
-        .home-title {
-            font-size: 42px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #2c2c2c;
-        }
-
-        .home-version {
-            display: inline-block;
-            background: #2c2c2c;
-            color: #ffffff;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 20px;
-        }
-
-        .home-description {
-            font-size: 18px;
-            color: #666;
-            margin-bottom: 40px;
-        }
-
-        .welcome-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 30px;
-            border-radius: 15px;
-            color: white;
-            margin-top: 30px;
-            text-align: center;
-        }
-
-        .welcome-card h3 {
-            margin-bottom: 10px;
-        }
-
-        /* Status Page */
         .status-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
-            margin-top: 30px;
-            animation: fadeIn 0.6s ease;
+            margin-top: 20px;
         }
 
         .status-card {
@@ -331,12 +311,6 @@
             border: 1px solid #e5e5e5;
             border-radius: 10px;
             padding: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .status-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transform: translateY(-2px);
         }
 
         .status-card-title {
@@ -344,56 +318,18 @@
             font-weight: 600;
             color: #999;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 10px;
         }
 
         .status-card-value {
             font-size: 24px;
             font-weight: 600;
-            color: #2c2c2c;
         }
 
-        .status-card-small {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        /* Endpoints Page */
-        .search-box {
-            margin-bottom: 30px;
-            animation: fadeIn 0.6s ease;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 14px 20px;
-            border: 1px solid #e5e5e5;
-            border-radius: 8px;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #2c2c2c;
-            box-shadow: 0 0 0 3px rgba(44,44,44,0.1);
-        }
-
-        .category-section {
-            margin-bottom: 40px;
-            animation: fadeIn 0.6s ease;
-        }
-
-        .category-title {
-            font-size: 22px;
-            font-weight: 600;
-            color: #2c2c2c;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #2c2c2c;
+        .uptime-value {
+            font-family: monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: #28a745;
         }
 
         .endpoints-grid {
@@ -410,144 +346,31 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        .endpoint-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transform: translateY(-2px);
-        }
-
-        .endpoint-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .endpoint-name {
-            font-size: 16px;
-            font-weight: 600;
-            color: #2c2c2c;
-            margin-bottom: 4px;
-        }
-
-        .endpoint-desc {
-            font-size: 13px;
-            color: #999;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
         }
 
         .endpoint-btn {
             background: #2c2c2c;
-            color: #ffffff;
+            color: white;
             border: none;
             padding: 8px 20px;
             border-radius: 6px;
-            font-size: 13px;
-            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            margin-left: 15px;
         }
 
-        .endpoint-btn:hover {
-            background: #1a1a1a;
-            transform: scale(1.05);
-        }
-
-        /* Modal */
-        .modal-content {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
-
-        .modal-header {
-            border-bottom: 1px solid #e5e5e5;
-            padding: 20px 24px;
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #2c2c2c;
-        }
-
-        .modal-desc {
-            font-size: 13px;
-            color: #999;
-            margin-top: 4px;
-        }
-
-        .modal-body {
-            padding: 24px;
-        }
-
-        .modal-footer {
-            border-top: 1px solid #e5e5e5;
-            padding: 16px 24px;
-        }
-
-        .api-endpoint-box {
-            background: #f8f9fa;
-            padding: 12px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 13px;
-            color: #2c2c2c;
-            word-break: break-all;
-            margin-bottom: 16px;
-        }
-
-        .param-input {
+        .search-input {
             width: 100%;
-            padding: 12px;
+            padding: 14px 20px;
             border: 1px solid #e5e5e5;
-            border-radius: 6px;
-            font-size: 14px;
-            margin-bottom: 12px;
-            font-family: 'Poppins', sans-serif;
-            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin-bottom: 30px;
         }
 
-        .param-input:focus {
-            outline: none;
-            border-color: #2c2c2c;
-            box-shadow: 0 0 0 3px rgba(44,44,44,0.1);
-        }
-
-        .param-input.is-invalid {
-            border-color: #dc3545;
-        }
-
-        .inner-desc {
-            font-size: 12px;
-            color: #999;
-            margin-top: 8px;
-            line-height: 1.5;
-        }
-
-        .submit-btn {
-            background: #2c2c2c;
-            color: #ffffff;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .submit-btn:hover {
-            background: #1a1a1a;
-        }
-
-        .submit-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .category-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2c2c2c;
         }
 
         .response-box {
@@ -556,22 +379,11 @@
             border-radius: 6px;
             font-family: monospace;
             font-size: 13px;
-            color: #2c2c2c;
             white-space: pre-wrap;
-            word-wrap: break-word;
             max-height: 400px;
             overflow-y: auto;
-            margin-top: 16px;
         }
 
-        .response-image {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-top: 16px;
-        }
-
-        /* Footer */
         .footer {
             text-align: center;
             padding: 30px 20px;
@@ -580,99 +392,101 @@
             border-top: 1px solid #e5e5e5;
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .top-links {
-                display: none;
-            }
-
-            .home-title {
-                font-size: 32px;
-            }
-
-            .home-description {
-                font-size: 16px;
-            }
-
-            .endpoints-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .main-content {
-                padding: 20px 15px;
-            }
-
-            .user-info {
-                padding: 4px 10px;
-            }
-
-            .user-name {
-                font-size: 11px;
-            }
+            .main-content { padding: 20px 15px; }
+            .endpoints-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loadingScreen">
-        <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-        <p style="margin-top: 16px; color: #666;">Loading...</p>
-    </div>
-
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="top-bar-left">
-            <button class="menu-toggle" id="menuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <div class="api-name" id="apiName">CACAROTO API</div>
-        </div>
-        <div class="top-bar-right">
-            <div class="user-info" id="userInfo">
-                <span class="user-name" id="userName"></span>
-                <button class="logout-btn" id="logoutBtn">Cerrar sesión</button>
+    <!-- Pantalla de Login/Registro -->
+    <div id="authContainer" class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>CACAROTO API</h2>
+                <p id="authSubtitle">Iniciar sesión</p>
             </div>
-            <div class="top-links" id="topLinks"></div>
+            <div class="auth-body">
+                <div id="authError" class="error-message"></div>
+                <div id="authSuccess" class="success-message"></div>
+                
+                <div id="loginForm">
+                    <div class="form-group">
+                        <label>Correo electrónico</label>
+                        <input type="email" class="form-control" id="loginEmail" placeholder="tucorreo@ejemplo.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="password" class="form-control" id="loginPassword" placeholder="••••••••">
+                    </div>
+                    <button class="btn-auth" id="doLoginBtn">Iniciar sesión</button>
+                    <div class="switch-link">
+                        ¿No tienes cuenta? <a id="showRegisterLink">Crear cuenta</a>
+                    </div>
+                </div>
+
+                <div id="registerForm" style="display: none;">
+                    <div class="form-group">
+                        <label>Nombre completo</label>
+                        <input type="text" class="form-control" id="regFullName" placeholder="Tu nombre completo">
+                    </div>
+                    <div class="form-group">
+                        <label>Correo electrónico</label>
+                        <input type="email" class="form-control" id="regEmail" placeholder="tucorreo@ejemplo.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="password" class="form-control" id="regPassword" placeholder="••••••••">
+                        <div class="password-strength" id="passwordStrength"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmar contraseña</label>
+                        <input type="password" class="form-control" id="regConfirmPassword" placeholder="••••••••">
+                    </div>
+                    <button class="btn-auth" id="doRegisterBtn">Crear cuenta</button>
+                    <div class="switch-link">
+                        ¿Ya tienes cuenta? <a id="showLoginLink">Iniciar sesión</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Sidebar -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-nav">
-            <div class="sidebar-item active" data-page="home">Home</div>
-            <div class="sidebar-item" data-page="status">Status</div>
-            <div class="sidebar-category">Categories</div>
-            <div id="categoriesNav"></div>
-            <div class="sidebar-item" data-page="all">All Endpoints</div>
+    <!-- Dashboard de la API (oculto hasta login) -->
+    <div id="dashboardContainer" class="dashboard-container">
+        <div class="top-bar">
+            <div class="top-bar-left" style="display: flex; align-items: center; gap: 15px;">
+                <button class="menu-toggle" id="menuToggle">
+                    <span></span><span></span><span></span>
+                </button>
+                <div class="api-name">CACAROTO API</div>
+            </div>
+            <div class="top-bar-right">
+                <div class="user-info">
+                    <span id="userNameDisplay"></span>
+                    <button class="logout-btn" id="logoutBtn">Cerrar sesión</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-nav">
+                <div class="sidebar-item active" data-page="home">Home</div>
+                <div class="sidebar-item" data-page="status">Status</div>
+                <div class="sidebar-category">Categories</div>
+                <div id="categoriesNav"></div>
+                <div class="sidebar-item" data-page="all">All Endpoints</div>
+            </div>
+        </div>
+
+        <div class="main-content" id="mainContent"></div>
+        <div class="footer">
+            <p>Created by CACAROTO Team</p>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content" id="mainContent"></div>
-
-    <!-- Footer -->
-    <div class="footer">
-        <p id="footerText"></p>
-    </div>
-
-    <!-- Modal -->
+    <!-- Modal para endpoints -->
     <div class="modal fade" id="apiModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -684,15 +498,15 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="api-endpoint-box" id="endpointBox" style="display: none;"></div>
+                    <div id="endpointBox" style="background:#f8f9fa; padding:12px; border-radius:6px; font-family:monospace; display:none;"></div>
                     <div id="paramsContainer"></div>
-                    <div id="loadingContainer" style="display: none; text-align: center; padding: 40px;">
-                        <div class="spinner-border" role="status"></div>
+                    <div id="loadingContainer" style="display:none; text-align:center; padding:40px;">
+                        <div class="spinner-border"></div>
                     </div>
                     <div id="responseContainer"></div>
                 </div>
                 <div class="modal-footer">
-                    <button class="submit-btn" id="submitBtn" style="display: none;">Submit</button>
+                    <button class="btn btn-dark" id="submitBtn" style="display:none;">Submit</button>
                 </div>
             </div>
         </div>
@@ -700,457 +514,421 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Check authentication
-        const currentUser = JSON.parse(localStorage.getItem('cacaroto_current_user'));
-        const session = JSON.parse(localStorage.getItem('cacaroto_session'));
+        // ============ SISTEMA DE AUTENTICACIÓN ============
+        let currentUser = null;
 
-        if (!currentUser || !session) {
-            window.location.href = 'login.html';
-        }
-
-        // Display user name
-        document.getElementById('userName').textContent = currentUser.fullName;
-
-        // Logout function
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('cacaroto_session');
-            localStorage.removeItem('cacaroto_current_user');
-            window.location.href = 'login.html';
-        });
-
-        let settings = {};
-        let currentPage = 'home';
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            await loadSettings();
-            initializeUI();
-            renderPage('home');
-            hideLoading();
-        });
-
-        async function loadSettings() {
-            try {
-                const response = await fetch('/src/settings.json');
-                settings = await response.json();
-
-                document.getElementById('pageTitle').textContent = settings.name || 'CACAROTO API';
-                document.getElementById('footerText').textContent = `Created by ${settings.apiSettings?.creator || 'CACAROTO Team'}`;
-
-                // Top links
-                const topLinksContainer = document.getElementById('topLinks');
-                if (settings.links && settings.links.length > 0) {
-                    settings.links.forEach(link => {
-                        const a = document.createElement('a');
-                        a.href = link.url;
-                        a.className = 'top-link';
-                        a.target = '_blank';
-                        a.innerHTML = `
-                            <svg class="link-icon" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path>
-                                <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path>
-                            </svg>
-                            ${link.name}
-                        `;
-                        topLinksContainer.appendChild(a);
-                    });
-                }
-
-                // Categories navigation
-                const categoriesNav = document.getElementById('categoriesNav');
-                if (settings.categories) {
-                    settings.categories.forEach(category => {
-                        const item = document.createElement('div');
-                        item.className = 'sidebar-item';
-                        item.dataset.page = 'category';
-                        item.dataset.category = category.name;
-                        item.textContent = category.name;
-                        categoriesNav.appendChild(item);
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading settings:', error);
+        // Verificar si hay sesión guardada
+        function checkSession() {
+            const savedUser = localStorage.getItem('cacaroto_current_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showDashboard();
             }
         }
 
-        function initializeUI() {
-            // Menu toggle
+        function showDashboard() {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').classList.add('active');
+            document.getElementById('userNameDisplay').textContent = currentUser.fullName;
+            loadDashboardSettings();
+        }
+
+        function showAuth() {
+            document.getElementById('authContainer').style.display = 'flex';
+            document.getElementById('dashboardContainer').classList.remove('active');
+        }
+
+        function logout() {
+            localStorage.removeItem('cacaroto_current_user');
+            currentUser = null;
+            showAuth();
+            // Limpiar formularios
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        // Registrar usuario
+        function registerUser() {
+            const fullName = document.getElementById('regFullName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            
+            const errorDiv = document.getElementById('authError');
+            const successDiv = document.getElementById('authSuccess');
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+            
+            if (!fullName || !email || !password) {
+                errorDiv.textContent = 'Por favor completa todos los campos';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                errorDiv.textContent = 'Correo electrónico inválido';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            if (password.length < 6) {
+                errorDiv.textContent = 'La contraseña debe tener al menos 6 caracteres';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                errorDiv.textContent = 'Las contraseñas no coinciden';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            let users = JSON.parse(localStorage.getItem('cacaroto_users') || '[]');
+            if (users.some(u => u.email === email)) {
+                errorDiv.textContent = 'Este correo ya está registrado';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            const newUser = {
+                id: Date.now(),
+                fullName: fullName,
+                email: email,
+                password: password,
+                createdAt: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('cacaroto_users', JSON.stringify(users));
+            
+            successDiv.textContent = '¡Cuenta creada! Ahora inicia sesión';
+            successDiv.style.display = 'block';
+            
+            // Limpiar y cambiar a login
+            setTimeout(() => {
+                document.getElementById('regFullName').value = '';
+                document.getElementById('regEmail').value = '';
+                document.getElementById('regPassword').value = '';
+                document.getElementById('regConfirmPassword').value = '';
+                showLoginForm();
+                successDiv.style.display = 'none';
+            }, 2000);
+        }
+        
+        function loginUser() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            const errorDiv = document.getElementById('authError');
+            errorDiv.style.display = 'none';
+            
+            if (!email || !password) {
+                errorDiv.textContent = 'Ingresa tu correo y contraseña';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('cacaroto_users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (!user) {
+                errorDiv.textContent = 'Correo o contraseña incorrectos';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            currentUser = user;
+            localStorage.setItem('cacaroto_current_user', JSON.stringify(user));
+            showDashboard();
+        }
+        
+        function showRegisterForm() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('authSubtitle').textContent = 'Crear cuenta';
+        }
+        
+        function showLoginForm() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('authSubtitle').textContent = 'Iniciar sesión';
+        }
+        
+        // Verificar fuerza de contraseña
+        document.getElementById('regPassword')?.addEventListener('input', function() {
+            const password = this.value;
+            const strengthDiv = document.getElementById('passwordStrength');
+            if (password.length === 0) {
+                strengthDiv.innerHTML = '';
+                return;
+            }
+            let strength = 0;
+            if (password.length >= 6) strength++;
+            if (password.length >= 10) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            let text = '', classname = '';
+            if (strength <= 2) { text = 'Débil'; classname = 'strength-weak'; }
+            else if (strength <= 4) { text = 'Media'; classname = 'strength-medium'; }
+            else { text = 'Fuerte'; classname = 'strength-strong'; }
+            strengthDiv.innerHTML = `Fortaleza: <span class="${classname}">${text}</span>`;
+        });
+        
+        // ============ API DASHBOARD ============
+        let settings = {};
+        let uptimeSeconds = 0;
+        let uptimeInterval = null;
+        
+        async function loadDashboardSettings() {
+            try {
+                const response = await fetch('/src/settings.json');
+                settings = await response.json();
+            } catch (error) {
+                console.log('Usando configuración por defecto');
+                settings = {
+                    name: 'CACAROTO API',
+                    version: 'v1.0',
+                    description: 'API Documentation',
+                    categories: [
+                        { name: 'Ejemplo', items: [
+                            { name: 'Test Endpoint', desc: 'Endpoint de prueba', path: '/api/test' }
+                        ] }
+                    ]
+                };
+            }
+            
+            // Cargar categorías en sidebar
+            const categoriesNav = document.getElementById('categoriesNav');
+            if (settings.categories) {
+                settings.categories.forEach(cat => {
+                    const item = document.createElement('div');
+                    item.className = 'sidebar-item';
+                    item.dataset.page = 'category';
+                    item.dataset.category = cat.name;
+                    item.textContent = cat.name;
+                    categoriesNav.appendChild(item);
+                });
+            }
+            
+            initializeDashboardUI();
+            renderPage('home');
+        }
+        
+        function initializeDashboardUI() {
             const menuToggle = document.getElementById('menuToggle');
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
-
+            
             menuToggle.addEventListener('click', () => {
                 menuToggle.classList.toggle('active');
                 sidebar.classList.toggle('active');
                 overlay.classList.toggle('active');
             });
-
+            
             overlay.addEventListener('click', () => {
                 menuToggle.classList.remove('active');
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
-
-            // Sidebar navigation
+            
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const page = item.dataset.page;
                     const category = item.dataset.category;
-
                     document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
                     item.classList.add('active');
-
-                    if (page === 'category') {
-                        renderPage('category', category);
-                    } else {
-                        renderPage(page);
-                    }
-
+                    renderPage(page, category);
                     menuToggle.classList.remove('active');
                     sidebar.classList.remove('active');
                     overlay.classList.remove('active');
                 });
             });
-
-            // Scroll effect
-            window.addEventListener('scroll', () => {
-                const topBar = document.querySelector('.top-bar');
-                if (window.scrollY > 0) {
-                    topBar.classList.add('scrolled');
-                } else {
-                    topBar.classList.remove('scrolled');
-                }
-            });
+            
+            document.getElementById('logoutBtn').addEventListener('click', logout);
         }
-
+        
         function renderPage(page, category = null) {
-            currentPage = page;
-            const content = document.getElementById('mainContent');
-
-            switch (page) {
-                case 'home':
-                    renderHomePage(content);
-                    break;
-                case 'status':
-                    renderStatusPage(content);
-                    break;
-                case 'category':
-                    renderCategoryPage(content, category);
-                    break;
-                case 'all':
-                    renderAllEndpoints(content);
-                    break;
+            if (page !== 'status' && uptimeInterval) {
+                clearInterval(uptimeInterval);
+                uptimeInterval = null;
             }
+            
+            const content = document.getElementById('mainContent');
+            if (page === 'home') renderHome(content);
+            else if (page === 'status') renderStatus(content);
+            else if (page === 'category') renderCategory(content, category);
+            else if (page === 'all') renderAllEndpoints(content);
         }
-
-        function renderHomePage(container) {
-            const imageSrc = Array.isArray(settings.header?.imageSrc) && settings.header.imageSrc.length > 0
-                ? settings.header.imageSrc[Math.floor(Math.random() * settings.header.imageSrc.length)]
-                : '';
-
+        
+        function renderHome(container) {
             container.innerHTML = `
-                <div class="home-banner">
-                    ${imageSrc ? `<img src="${imageSrc}" alt="${settings.name}" style="max-width: ${settings.header?.imageSize?.desktop || '40%'}">` : ''}
-                    <h1 class="home-title">${settings.name || 'CACAROTO API'}</h1>
-                    <div class="home-version">${settings.version || 'v1.0'}</div>
-                    <p class="home-description">${settings.description || 'API Documentation'}</p>
-                    <div class="welcome-card">
+                <div style="text-align:center; padding:40px 20px;">
+                    <h1 style="font-size:42px; font-weight:600;">${settings.name || 'CACAROTO API'}</h1>
+                    <div style="display:inline-block; background:#2c2c2c; color:white; padding:6px 16px; border-radius:20px; margin:20px 0;">${settings.version || 'v1.0'}</div>
+                    <p style="font-size:18px; color:#666;">${settings.description || 'API Documentation'}</p>
+                    <div style="background:linear-gradient(135deg, #667eea, #764ba2); padding:30px; border-radius:15px; color:white; margin-top:30px;">
                         <h3>👋 Bienvenido, ${currentUser.fullName}!</h3>
                         <p>Has iniciado sesión correctamente en CACAROTO API</p>
                     </div>
                 </div>
             `;
         }
-
-        async function renderStatusPage(container) {
-            container.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="spinner-border"></div></div>';
-
+        
+        async function renderStatus(container) {
+            container.innerHTML = `
+                <h2 style="font-size:28px; margin-bottom:30px;">API Status <span style="background:#28a745; color:white; padding:5px 12px; border-radius:30px; font-size:13px; margin-left:15px;">🔴 LIVE</span></h2>
+                <div class="status-grid" id="statusGrid"></div>
+            `;
+            
             try {
                 const response = await fetch('/status');
                 const data = await response.json();
-
-                container.innerHTML = `
-                    <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 30px;">API Status</h2>
-                    <div class="status-grid">
-                        <div class="status-card">
-                            <div class="status-card-title">Status</div>
-                            <div class="status-card-value" style="color: #28a745;">Online</div>
-                        </div>
-                        <div class="status-card">
-                            <div class="status-card-title">Version</div>
-                            <div class="status-card-value">${settings.version || 'N/A'}</div>
-                        </div>
-                        <div class="status-card">
-                            <div class="status-card-title">Total Requests</div>
-                            <div class="status-card-value">${data.total_requests || 0}</div>
-                        </div>
-                        <div class="status-card">
-                            <div class="status-card-title">Active Users</div>
-                            <div class="status-card-value">${data.active_users || 0}</div>
-                        </div>
-                        <div class="status-card">
-                            <div class="status-card-title">Daily Limit</div>
-                            <div class="status-card-value">${data.daily_limit || 'N/A'}</div>
-                        </div>
-                        <div class="status-card">
-                            <div class="status-card-title">Routes Loaded</div>
-                            <div class="status-card-value">${data.routes_loaded || 0}</div>
-                        </div>
-                        <div class="status-card">
-                            <div class="status-card-title">Uptime</div>
-                            <div class="status-card-value">${formatUptime(data.uptime_seconds)}</div>
-                        </div>
-                        <div class="status-card">
-                            <div class="status-card-title">API Latency</div>
-                            <div class="status-card-value">${data.api_latency_ms || 0}ms</div>
-                        </div>
-                    </div>
+                uptimeSeconds = data.uptime_seconds || 0;
+                
+                const grid = document.getElementById('statusGrid');
+                grid.innerHTML = `
+                    <div class="status-card"><div class="status-card-title">Status</div><div class="status-card-value" style="color:#28a745;">Online</div></div>
+                    <div class="status-card"><div class="status-card-title">Version</div><div class="status-card-value">${settings.version || 'N/A'}</div></div>
+                    <div class="status-card"><div class="status-card-title">UPTIME</div><div class="status-card-value uptime-value" id="uptimeDisplay">0s</div><div id="uptimeSeconds" style="font-size:12px; color:#666;">0 segundos</div></div>
+                    <div class="status-card"><div class="status-card-title">Total Requests</div><div class="status-card-value">${data.total_requests || 0}</div></div>
+                    <div class="status-card"><div class="status-card-title">Active Users</div><div class="status-card-value">${data.active_users || 0}</div></div>
+                    <div class="status-card"><div class="status-card-title">Daily Limit</div><div class="status-card-value">${data.daily_limit || 'N/A'}</div></div>
+                    <div class="status-card"><div class="status-card-title">Routes Loaded</div><div class="status-card-value">${data.routes_loaded || 0}</div></div>
+                    <div class="status-card"><div class="status-card-title">API Latency</div><div class="status-card-value">${data.api_latency_ms || 0}ms</div></div>
+                    <div class="status-card"><div class="status-card-title">CPU Cores</div><div class="status-card-value">${data.system?.cores || 'N/A'}</div><div style="font-size:12px;">${data.system?.cpu_model || ''}</div></div>
+                    <div class="status-card"><div class="status-card-title">CPU Load</div><div class="status-card-value">${data.system?.cpu_load_percent || 0}%</div></div>
+                    <div class="status-card"><div class="status-card-title">RAM Usage</div><div class="status-card-value">${data.system?.ram_used_gb || 0} GB</div><div style="font-size:12px;">of ${data.system?.ram_total_gb || 0} GB</div></div>
+                    <div class="status-card"><div class="status-card-title">Disk Usage</div><div class="status-card-value">${data.system?.disk_used_gb || 0} GB</div><div style="font-size:12px;">of ${data.system?.disk_total_gb || 0} GB</div></div>
                 `;
-            } catch (error) {
-                container.innerHTML = '<p style="text-align: center; color: #dc3545;">Failed to load status</p>';
+            } catch(e) {
+                document.getElementById('statusGrid').innerHTML = '<p>Error cargando status</p>';
+                if (!uptimeSeconds) uptimeSeconds = Math.floor(Date.now() / 1000) - (sessionStorage.getItem('api_start') || Date.now()/1000);
             }
+            
+            updateUptimeDisplay();
+            uptimeInterval = setInterval(() => { uptimeSeconds++; updateUptimeDisplay(); }, 1000);
         }
-
-        function renderCategoryPage(container, categoryName) {
+        
+        function updateUptimeDisplay() {
+            const days = Math.floor(uptimeSeconds / 86400);
+            const hours = Math.floor((uptimeSeconds % 86400) / 3600);
+            const minutes = Math.floor((uptimeSeconds % 3600) / 60);
+            const secs = uptimeSeconds % 60;
+            let display = '';
+            if (days > 0) display = `${days}d ${hours}h ${minutes}m ${secs}s`;
+            else if (hours > 0) display = `${hours}h ${minutes}m ${secs}s`;
+            else if (minutes > 0) display = `${minutes}m ${secs}s`;
+            else display = `${secs}s`;
+            
+            const el = document.getElementById('uptimeDisplay');
+            const secEl = document.getElementById('uptimeSeconds');
+            if (el) el.textContent = display;
+            if (secEl) secEl.textContent = `${uptimeSeconds.toLocaleString()} segundos`;
+        }
+        
+        function renderCategory(container, categoryName) {
             const category = settings.categories?.find(c => c.name === categoryName);
             if (!category) return;
-
-            const sortedItems = [...category.items].sort((a, b) => a.name.localeCompare(b.name));
-
             container.innerHTML = `
-                <div class="search-box">
-                    <input type="text" class="search-input" placeholder="Search endpoints..." id="searchInput">
-                </div>
+                <input type="text" class="search-input" placeholder="Buscar endpoints..." id="searchInput">
                 <div class="category-section">
                     <h2 class="category-title">${category.name}</h2>
                     <div class="endpoints-grid" id="endpointsGrid">
-                        ${sortedItems.map(item => createEndpointCard(item)).join('')}
+                        ${category.items.map(item => `
+                            <div class="endpoint-card" data-name="${item.name.toLowerCase()}">
+                                <div><strong>${item.name}</strong><br><small style="color:#999;">${item.desc}</small></div>
+                                <button class="endpoint-btn" data-path="${item.path}" data-name="${item.name}" data-desc="${item.desc}">GET</button>
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
             `;
-
-            setupSearch();
-            setupEndpointButtons();
+            setupSearchAndButtons();
         }
-
+        
         function renderAllEndpoints(container) {
-            container.innerHTML = `
-                <div class="search-box">
-                    <input type="text" class="search-input" placeholder="Search endpoints..." id="searchInput">
-                </div>
-                <div id="allCategories"></div>
-            `;
-
-            const allCategories = document.getElementById('allCategories');
-            if (settings.categories) {
-                settings.categories.forEach(category => {
-                    const sortedItems = [...category.items].sort((a, b) => a.name.localeCompare(b.name));
-
-                    allCategories.innerHTML += `
-                        <div class="category-section" data-category="${category.name}">
-                            <h2 class="category-title">${category.name}</h2>
-                            <div class="endpoints-grid">
-                                ${sortedItems.map(item => createEndpointCard(item)).join('')}
-                            </div>
-                        </div>
-                    `;
+            let html = `<input type="text" class="search-input" placeholder="Buscar endpoints..." id="searchInput">`;
+            settings.categories?.forEach(cat => {
+                html += `<div class="category-section"><h2 class="category-title">${cat.name}</h2><div class="endpoints-grid">`;
+                cat.items.forEach(item => {
+                    html += `<div class="endpoint-card" data-name="${item.name.toLowerCase()}">
+                        <div><strong>${item.name}</strong><br><small style="color:#999;">${item.desc}</small></div>
+                        <button class="endpoint-btn" data-path="${item.path}" data-name="${item.name}" data-desc="${item.desc}">GET</button>
+                    </div>`;
+                });
+                html += `</div></div>`;
+            });
+            container.innerHTML = html;
+            setupSearchAndButtons();
+        }
+        
+        function setupSearchAndButtons() {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const term = e.target.value.toLowerCase();
+                    document.querySelectorAll('.endpoint-card').forEach(card => {
+                        const name = card.dataset.name;
+                        card.style.display = name.includes(term) ? '' : 'none';
+                    });
                 });
             }
-
-            setupSearch();
-            setupEndpointButtons();
-        }
-
-        function createEndpointCard(item) {
-            return `
-                <div class="endpoint-card" data-name="${item.name.toLowerCase()}" data-desc="${item.desc.toLowerCase()}">
-                    <div class="endpoint-info">
-                        <div class="endpoint-name">${item.name}</div>
-                        <div class="endpoint-desc">${item.desc}</div>
-                    </div>
-                    <button class="endpoint-btn" data-path="${item.path}" data-name="${item.name}" data-desc="${item.desc}" data-inner-desc="${item.innerDesc || ''}">
-                        GET
-                    </button>
-                </div>
-            `;
-        }
-
-        function setupSearch() {
-            const searchInput = document.getElementById('searchInput');
-            if (!searchInput) return;
-
-            searchInput.addEventListener('input', (e) => {
-                const term = e.target.value.toLowerCase();
-                const cards = document.querySelectorAll('.endpoint-card');
-                const sections = document.querySelectorAll('.category-section');
-
-                cards.forEach(card => {
-                    const name = card.dataset.name;
-                    const desc = card.dataset.desc;
-                    const matches = name.includes(term) || desc.includes(term);
-                    card.style.display = matches ? '' : 'none';
-                });
-
-                sections.forEach(section => {
-                    const visibleCards = section.querySelectorAll('.endpoint-card:not([style*="display: none"])');
-                    section.style.display = visibleCards.length > 0 ? '' : 'none';
-                });
-            });
-        }
-
-        function setupEndpointButtons() {
             document.querySelectorAll('.endpoint-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    const path = btn.dataset.path;
-                    const name = btn.dataset.name;
-                    const desc = btn.dataset.desc;
-                    const innerDesc = btn.dataset.innerDesc;
-
-                    openModal(path, name, desc, innerDesc);
+                    const modal = new bootstrap.Modal(document.getElementById('apiModal'));
+                    document.getElementById('modalTitle').textContent = btn.dataset.name;
+                    document.getElementById('modalDesc').textContent = btn.dataset.desc;
+                    document.getElementById('paramsContainer').innerHTML = '';
+                    document.getElementById('responseContainer').innerHTML = '';
+                    document.getElementById('submitBtn').style.display = 'none';
+                    document.getElementById('endpointBox').style.display = 'block';
+                    document.getElementById('endpointBox').textContent = window.location.origin + btn.dataset.path;
+                    makeApiRequest(window.location.origin + btn.dataset.path);
+                    modal.show();
                 });
             });
         }
-
-        function openModal(path, name, desc, innerDesc) {
-            const modal = new bootstrap.Modal(document.getElementById('apiModal'));
-
-            document.getElementById('modalTitle').textContent = name;
-            document.getElementById('modalDesc').textContent = desc;
-            document.getElementById('endpointBox').style.display = 'none';
-            document.getElementById('paramsContainer').innerHTML = '';
-            document.getElementById('responseContainer').innerHTML = '';
-            document.getElementById('submitBtn').style.display = 'none';
-
-            const baseUrl = window.location.origin + path;
-            const urlParts = path.split('?');
-            const params = new URLSearchParams(urlParts[1] || '');
-            const hasParams = Array.from(params.keys()).length > 0;
-
-            if (hasParams) {
-                const paramsContainer = document.getElementById('paramsContainer');
-
-                Array.from(params.keys()).forEach(param => {
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.className = 'param-input';
-                    input.placeholder = `Enter ${param}...`;
-                    input.dataset.param = param;
-                    input.required = true;
-                    paramsContainer.appendChild(input);
-                });
-
-                if (innerDesc) {
-                    const descDiv = document.createElement('div');
-                    descDiv.className = 'inner-desc';
-                    descDiv.innerHTML = innerDesc.replace(/\n/g, '<br>');
-                    paramsContainer.appendChild(descDiv);
-                }
-
-                const submitBtn = document.getElementById('submitBtn');
-                submitBtn.style.display = 'block';
-                submitBtn.disabled = true;
-
-                paramsContainer.querySelectorAll('.param-input').forEach(input => {
-                    input.addEventListener('input', () => {
-                        const allInputs = paramsContainer.querySelectorAll('.param-input');
-                        const allFilled = Array.from(allInputs).every(inp => inp.value.trim() !== '');
-                        submitBtn.disabled = !allFilled;
-                    });
-                });
-
-                submitBtn.onclick = () => {
-                    const inputs = paramsContainer.querySelectorAll('.param-input');
-                    const newParams = new URLSearchParams();
-                    let isValid = true;
-
-                    inputs.forEach(input => {
-                        if (!input.value.trim()) {
-                            isValid = false;
-                            input.classList.add('is-invalid');
-                        } else {
-                            input.classList.remove('is-invalid');
-                            newParams.append(input.dataset.param, input.value.trim());
-                        }
-                    });
-
-                    if (!isValid) return;
-
-                    const fullUrl = `${window.location.origin}${urlParts[0]}?${newParams.toString()}`;
-                    paramsContainer.innerHTML = '';
-                    submitBtn.style.display = 'none';
-                    makeApiRequest(fullUrl);
-                };
-            } else {
-                makeApiRequest(baseUrl);
-            }
-
-            modal.show();
-        }
-
+        
         async function makeApiRequest(url) {
-            const endpointBox = document.getElementById('endpointBox');
-            const loadingContainer = document.getElementById('loadingContainer');
-            const responseContainer = document.getElementById('responseContainer');
-
-            endpointBox.textContent = url;
-            endpointBox.style.display = 'block';
-            loadingContainer.style.display = 'block';
-            responseContainer.innerHTML = '';
-
+            const loading = document.getElementById('loadingContainer');
+            const responseDiv = document.getElementById('responseContainer');
+            loading.style.display = 'block';
+            responseDiv.innerHTML = '';
             try {
-                const response = await fetch(url);
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const contentType = response.headers.get('Content-Type');
-
-                if (contentType && contentType.startsWith('image/')) {
-                    const blob = await response.blob();
-                    const imageUrl = URL.createObjectURL(blob);
-
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const contentType = res.headers.get('Content-Type');
+                if (contentType?.startsWith('image/')) {
+                    const blob = await res.blob();
                     const img = document.createElement('img');
-                    img.src = imageUrl;
-                    img.className = 'response-image';
-                    responseContainer.appendChild(img);
+                    img.src = URL.createObjectURL(blob);
+                    img.style.maxWidth = '100%';
+                    img.style.borderRadius = '8px';
+                    responseDiv.appendChild(img);
                 } else {
-                    const data = await response.json();
+                    const data = await res.json();
                     const pre = document.createElement('pre');
                     pre.className = 'response-box';
                     pre.textContent = JSON.stringify(data, null, 2);
-                    responseContainer.appendChild(pre);
+                    responseDiv.appendChild(pre);
                 }
-            } catch (error) {
-                const pre = document.createElement('pre');
-                pre.className = 'response-box';
-                pre.textContent = `Error: ${error.message}`;
-                pre.style.color = '#dc3545';
-                responseContainer.appendChild(pre);
-            } finally {
-                loadingContainer.style.display = 'none';
+            } catch(e) {
+                responseDiv.innerHTML = `<pre class="response-box" style="color:#dc3545;">Error: ${e.message}</pre>`;
             }
+            loading.style.display = 'none';
         }
-
-        function formatUptime(seconds) {
-            if (!seconds) return 'N/A';
-
-            const days = Math.floor(seconds / 86400);
-            const hours = Math.floor((seconds % 86400) / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-
-            if (days > 0) return `${days}d ${hours}h`;
-            if (hours > 0) return `${hours}h ${minutes}m`;
-            return `${minutes}m`;
-        }
-
-        function hideLoading() {
-            const loadingScreen = document.getElementById('loadingScreen');
-            loadingScreen.classList.add('fade-out');
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-                document.body.classList.remove('no-scroll');
-            }, 500);
-        }
+        
+        // Inicializar eventos de autenticación
+        document.getElementById('doLoginBtn')?.addEventListener('click', loginUser);
+        document.getElementById('doRegisterBtn')?.addEventListener('click', registerUser);
+        document.getElementById('showRegisterLink')?.addEventListener('click', showRegisterForm);
+        document.getElementById('showLoginLink')?.addEventListener('click', showLoginForm);
+        
+        // Verificar sesión al cargar
+        checkSession();
     </script>
 </body>
 </html>
