@@ -318,61 +318,11 @@
         }
 
         /* Status Page */
-        .status-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .status-header h2 {
-            font-size: 28px;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .live-badge {
-            background: #28a745;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 13px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .live-dot {
-            width: 10px;
-            height: 10px;
-            background: #ffffff;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.5;
-                transform: scale(1.2);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
         .status-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
-            margin-top: 20px;
+            margin-top: 30px;
             animation: fadeIn 0.6s ease;
         }
 
@@ -402,19 +352,6 @@
             font-size: 24px;
             font-weight: 600;
             color: #2c2c2c;
-        }
-
-        .uptime-value {
-            font-family: 'Monaco', 'Courier New', monospace;
-            font-size: 28px;
-            font-weight: 700;
-            color: #28a745;
-        }
-
-        .uptime-seconds {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
         }
 
         .status-card-small {
@@ -684,11 +621,6 @@
             .user-name {
                 font-size: 11px;
             }
-
-            .status-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
         }
     </style>
 </head>
@@ -788,8 +720,6 @@
 
         let settings = {};
         let currentPage = 'home';
-        let uptimeSeconds = 0;
-        let uptimeInterval = null;
 
         document.addEventListener('DOMContentLoaded', async () => {
             await loadSettings();
@@ -896,12 +826,6 @@
             currentPage = page;
             const content = document.getElementById('mainContent');
 
-            // Detener el intervalo de uptime si estamos saliendo de status
-            if (page !== 'status' && uptimeInterval) {
-                clearInterval(uptimeInterval);
-                uptimeInterval = null;
-            }
-
             switch (page) {
                 case 'home':
                     renderHomePage(content);
@@ -938,133 +862,51 @@
         }
 
         async function renderStatusPage(container) {
-            container.innerHTML = `
-                <div class="status-header">
-                    <h2>API Status</h2>
-                    <div class="live-badge">
-                        <span class="live-dot"></span>
-                        LIVE
-                    </div>
-                </div>
-                <div class="status-grid" id="statusGrid">
-                    <div class="status-card">
-                        <div class="status-card-title">Status</div>
-                        <div class="status-card-value" style="color: #28a745;">Online</div>
-                    </div>
-                    <div class="status-card">
-                        <div class="status-card-title">Version</div>
-                        <div class="status-card-value" id="statusVersion">${settings.version || 'N/A'}</div>
-                    </div>
-                    <div class="status-card">
-                        <div class="status-card-title">UPTIME</div>
-                        <div class="status-card-value uptime-value" id="uptimeDisplay">0d 0h 0m 0s</div>
-                        <div class="uptime-seconds" id="uptimeSeconds">0 segundos activo</div>
-                    </div>
-                    <div class="status-card">
-                        <div class="status-card-title">Total Requests</div>
-                        <div class="status-card-value" id="totalRequests">--</div>
-                    </div>
-                    <div class="status-card">
-                        <div class="status-card-title">Active Users</div>
-                        <div class="status-card-value" id="activeUsers">--</div>
-                    </div>
-                    <div class="status-card">
-                        <div class="status-card-title">Daily Limit</div>
-                        <div class="status-card-value" id="dailyLimit">--</div>
-                    </div>
-                    <div class="status-card">
-                        <div class="status-card-title">Routes Loaded</div>
-                        <div class="status-card-value" id="routesLoaded">--</div>
-                    </div>
-                    <div class="status-card">
-                        <div class="status-card-title">API Latency</div>
-                        <div class="status-card-value" id="apiLatency">--ms</div>
-                    </div>
-                    <div class="status-card">
-                        <div class="status-card-title">CPU Cores</div>
-                        <div class="status-card-value" id="cpuCores">--</div>
-                        <div class="status-card-small" id="cpuModel"></div>
-                    </div>
-                    <div class="status-card">
-                        <div class="status-card-title">CPU Load</div>
-                        <div class="status-card-value" id="cpuLoad">--%</div>
-                    </div>
-                    <div class="status-card">
-                        <div class="status-card-title">RAM Usage</div>
-                        <div class="status-card-value" id="ramUsage">-- GB</div>
-                        <div class="status-card-small" id="ramTotal">of -- GB</div>
-                    </div>
-                    <div class="status-card">
-                        <div class="status-card-title">Disk Usage</div>
-                        <div class="status-card-value" id="diskUsage">-- GB</div>
-                        <div class="status-card-small" id="diskTotal">of -- GB</div>
-                    </div>
-                </div>
-            `;
+            container.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="spinner-border"></div></div>';
 
-            // Obtener datos del servidor
             try {
                 const response = await fetch('/status');
                 const data = await response.json();
-                
-                // Actualizar todos los datos
-                uptimeSeconds = data.uptime_seconds || 0;
-                document.getElementById('totalRequests').textContent = data.total_requests || 0;
-                document.getElementById('activeUsers').textContent = data.active_users || 0;
-                document.getElementById('dailyLimit').textContent = data.daily_limit || 'N/A';
-                document.getElementById('routesLoaded').textContent = data.routes_loaded || 0;
-                document.getElementById('apiLatency').textContent = `${data.api_latency_ms || 0}ms`;
-                document.getElementById('cpuCores').textContent = data.system?.cores || 'N/A';
-                document.getElementById('cpuModel').textContent = data.system?.cpu_model || '';
-                document.getElementById('cpuLoad').textContent = `${data.system?.cpu_load_percent || 0}%`;
-                document.getElementById('ramUsage').textContent = `${data.system?.ram_used_gb || 0} GB`;
-                document.getElementById('ramTotal').textContent = `of ${data.system?.ram_total_gb || 0} GB`;
-                document.getElementById('diskUsage').textContent = `${data.system?.disk_used_gb || 0} GB`;
-                document.getElementById('diskTotal').textContent = `of ${data.system?.disk_total_gb || 0} GB`;
-                
+
+                container.innerHTML = `
+                    <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 30px;">API Status</h2>
+                    <div class="status-grid">
+                        <div class="status-card">
+                            <div class="status-card-title">Status</div>
+                            <div class="status-card-value" style="color: #28a745;">Online</div>
+                        </div>
+                        <div class="status-card">
+                            <div class="status-card-title">Version</div>
+                            <div class="status-card-value">${settings.version || 'N/A'}</div>
+                        </div>
+                        <div class="status-card">
+                            <div class="status-card-title">Total Requests</div>
+                            <div class="status-card-value">${data.total_requests || 0}</div>
+                        </div>
+                        <div class="status-card">
+                            <div class="status-card-title">Active Users</div>
+                            <div class="status-card-value">${data.active_users || 0}</div>
+                        </div>
+                        <div class="status-card">
+                            <div class="status-card-title">Daily Limit</div>
+                            <div class="status-card-value">${data.daily_limit || 'N/A'}</div>
+                        </div>
+                        <div class="status-card">
+                            <div class="status-card-title">Routes Loaded</div>
+                            <div class="status-card-value">${data.routes_loaded || 0}</div>
+                        </div>
+                        <div class="status-card">
+                            <div class="status-card-title">Uptime</div>
+                            <div class="status-card-value">${formatUptime(data.uptime_seconds)}</div>
+                        </div>
+                        <div class="status-card">
+                            <div class="status-card-title">API Latency</div>
+                            <div class="status-card-value">${data.api_latency_ms || 0}ms</div>
+                        </div>
+                    </div>
+                `;
             } catch (error) {
-                console.error('Error fetching status:', error);
-                // Si no hay respuesta del servidor, usar valores por defecto
-                if (!uptimeSeconds || uptimeSeconds === 0) {
-                    if (!sessionStorage.getItem('api_start_time')) {
-                        sessionStorage.setItem('api_start_time', Date.now() / 1000);
-                    }
-                    uptimeSeconds = Math.floor(Date.now() / 1000) - parseFloat(sessionStorage.getItem('api_start_time'));
-                }
-            }
-
-            // Iniciar el contador de uptime en tiempo real
-            updateUptimeDisplay();
-            
-            uptimeInterval = setInterval(() => {
-                uptimeSeconds++;
-                updateUptimeDisplay();
-            }, 1000);
-        }
-
-        function updateUptimeDisplay() {
-            const days = Math.floor(uptimeSeconds / 86400);
-            const hours = Math.floor((uptimeSeconds % 86400) / 3600);
-            const minutes = Math.floor((uptimeSeconds % 3600) / 60);
-            const seconds = uptimeSeconds % 60;
-            
-            const uptimeDisplay = document.getElementById('uptimeDisplay');
-            const uptimeSecondsSpan = document.getElementById('uptimeSeconds');
-            
-            if (uptimeDisplay) {
-                if (days > 0) {
-                    uptimeDisplay.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-                } else if (hours > 0) {
-                    uptimeDisplay.textContent = `${hours}h ${minutes}m ${seconds}s`;
-                } else if (minutes > 0) {
-                    uptimeDisplay.textContent = `${minutes}m ${seconds}s`;
-                } else {
-                    uptimeDisplay.textContent = `${seconds}s`;
-                }
-            }
-            
-            if (uptimeSecondsSpan) {
-                uptimeSecondsSpan.textContent = `${uptimeSeconds.toLocaleString()} segundos activo`;
+                container.innerHTML = '<p style="text-align: center; color: #dc3545;">Failed to load status</p>';
             }
         }
 
@@ -1287,6 +1129,18 @@
             } finally {
                 loadingContainer.style.display = 'none';
             }
+        }
+
+        function formatUptime(seconds) {
+            if (!seconds) return 'N/A';
+
+            const days = Math.floor(seconds / 86400);
+            const hours = Math.floor((seconds % 86400) / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+
+            if (days > 0) return `${days}d ${hours}h`;
+            if (hours > 0) return `${hours}h ${minutes}m`;
+            return `${minutes}m`;
         }
 
         function hideLoading() {
