@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node --no-deprecation index.js"
   },
-  "author": "Dvwilker",
+  "author": "DVWILKER",
   "license": "MIT",
   "dependencies": {
     "axios": "^1.6.8",
@@ -20,6 +20,7 @@
     "fs": "^0.0.1-security",
     "https": "^1.0.0",
     "node-fetch": "^2.6.1",
-    "yt-search": "^2.12.1"
+    "yt-search": "^2.12.1",
+    "ytdl-core": "^4.11.5"
   }
 }
