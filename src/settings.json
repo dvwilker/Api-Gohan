@@ -68,12 +68,12 @@
       ]
     },
     {
-      "name": "Random",
+      "name": "Api test",
       "items": [
         {
-          "name": "Blue Archive",
-          "desc": "Random Blue Archive image",
-          "path": "/random/ba"
+          "name": "api-test",
+          "desc": "Api funcional test",
+          "path": "/test/api"
         }
       ]
     }
