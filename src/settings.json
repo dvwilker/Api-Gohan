@@ -73,7 +73,7 @@
         {
           "name": "api-test",
           "desc": "Api funcional test",
-          "path": "/test/api"
+          "path": "/test/yt"
         }
       ]
     }
