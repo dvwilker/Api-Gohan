@@ -409,7 +409,7 @@
             <div class="auth-body">
                 <div id="authError" class="error-message"></div>
                 <div id="authSuccess" class="success-message"></div>
-                
+
                 <div id="loginForm">
                     <div class="form-group">
                         <label>Correo electrónico</label>
@@ -459,7 +459,7 @@
                 <button class="menu-toggle" id="menuToggle">
                     <span></span><span></span><span></span>
                 </button>
-                <div class="api-name">CACAROTO API</div>
+                <div class="api-name">API GOHAN</div>
             </div>
             <div class="top-bar-right">
                 <div class="user-info">
@@ -482,7 +482,7 @@
 
         <div class="main-content" id="mainContent"></div>
         <div class="footer">
-            <p>Created by CACAROTO Team</p>
+            <p>© 2024 - 2026 DV WILKER | Todos los derechos reservados</p>
         </div>
     </div>
 
@@ -519,7 +519,7 @@
 
         // Verificar si hay sesión guardada
         function checkSession() {
-            const savedUser = localStorage.getItem('cacaroto_current_user');
+            const savedUser = localStorage.getItem('api_gohan_current_user');
             if (savedUser) {
                 currentUser = JSON.parse(savedUser);
                 showDashboard();
@@ -539,7 +539,7 @@
         }
 
         function logout() {
-            localStorage.removeItem('cacaroto_current_user');
+            localStorage.removeItem('api_gohan_current_user');
             currentUser = null;
             showAuth();
             // Limpiar formularios
@@ -553,44 +553,44 @@
             const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPassword').value;
             const confirmPassword = document.getElementById('regConfirmPassword').value;
-            
+
             const errorDiv = document.getElementById('authError');
             const successDiv = document.getElementById('authSuccess');
             errorDiv.style.display = 'none';
             successDiv.style.display = 'none';
-            
+
             if (!fullName || !email || !password) {
                 errorDiv.textContent = 'Por favor completa todos los campos';
                 errorDiv.style.display = 'block';
                 return;
             }
-            
+
             const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 errorDiv.textContent = 'Correo electrónico inválido';
                 errorDiv.style.display = 'block';
                 return;
             }
-            
+
             if (password.length < 6) {
                 errorDiv.textContent = 'La contraseña debe tener al menos 6 caracteres';
                 errorDiv.style.display = 'block';
                 return;
             }
-            
+
             if (password !== confirmPassword) {
                 errorDiv.textContent = 'Las contraseñas no coinciden';
                 errorDiv.style.display = 'block';
                 return;
             }
-            
-            let users = JSON.parse(localStorage.getItem('cacaroto_users') || '[]');
+
+            let users = JSON.parse(localStorage.getItem('api_gohan_users') || '[]');
             if (users.some(u => u.email === email)) {
                 errorDiv.textContent = 'Este correo ya está registrado';
                 errorDiv.style.display = 'block';
                 return;
             }
-            
+
             const newUser = {
                 id: Date.now(),
                 fullName: fullName,
@@ -598,13 +598,13 @@
                 password: password,
                 createdAt: new Date().toISOString()
             };
-            
+
             users.push(newUser);
-            localStorage.setItem('cacaroto_users', JSON.stringify(users));
-            
+            localStorage.setItem('api_gohan_users', JSON.stringify(users));
+
             successDiv.textContent = '¡Cuenta creada! Ahora inicia sesión';
             successDiv.style.display = 'block';
-            
+
             // Limpiar y cambiar a login
             setTimeout(() => {
                 document.getElementById('regFullName').value = '';
@@ -615,46 +615,46 @@
                 successDiv.style.display = 'none';
             }, 2000);
         }
-        
+
         function loginUser() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
-            
+
             const errorDiv = document.getElementById('authError');
             errorDiv.style.display = 'none';
-            
+
             if (!email || !password) {
                 errorDiv.textContent = 'Ingresa tu correo y contraseña';
                 errorDiv.style.display = 'block';
                 return;
             }
-            
-            const users = JSON.parse(localStorage.getItem('cacaroto_users') || '[]');
+
+            const users = JSON.parse(localStorage.getItem('api_gohan_users') || '[]');
             const user = users.find(u => u.email === email && u.password === password);
-            
+
             if (!user) {
                 errorDiv.textContent = 'Correo o contraseña incorrectos';
                 errorDiv.style.display = 'block';
                 return;
             }
-            
+
             currentUser = user;
-            localStorage.setItem('cacaroto_current_user', JSON.stringify(user));
+            localStorage.setItem('api_gohan_current_user', JSON.stringify(user));
             showDashboard();
         }
-        
+
         function showRegisterForm() {
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('registerForm').style.display = 'block';
             document.getElementById('authSubtitle').textContent = 'Crear cuenta';
         }
-        
+
         function showLoginForm() {
             document.getElementById('loginForm').style.display = 'block';
             document.getElementById('registerForm').style.display = 'none';
             document.getElementById('authSubtitle').textContent = 'Iniciar sesión';
         }
-        
+
         // Verificar fuerza de contraseña
         document.getElementById('regPassword')?.addEventListener('input', function() {
             const password = this.value;
@@ -669,19 +669,19 @@
             if (/[A-Z]/.test(password)) strength++;
             if (/[0-9]/.test(password)) strength++;
             if (/[^A-Za-z0-9]/.test(password)) strength++;
-            
+
             let text = '', classname = '';
             if (strength <= 2) { text = 'Débil'; classname = 'strength-weak'; }
             else if (strength <= 4) { text = 'Media'; classname = 'strength-medium'; }
             else { text = 'Fuerte'; classname = 'strength-strong'; }
             strengthDiv.innerHTML = `Fortaleza: <span class="${classname}">${text}</span>`;
         });
-        
+
         // ============ API DASHBOARD ============
         let settings = {};
         let uptimeSeconds = 0;
         let uptimeInterval = null;
-        
+
         async function loadDashboardSettings() {
             try {
                 const response = await fetch('/src/settings.json');
@@ -689,7 +689,7 @@
             } catch (error) {
                 console.log('Usando configuración por defecto');
                 settings = {
-                    name: 'CACAROTO API',
+                    name: 'API GOHAN',
                     version: 'v1.0',
                     description: 'API Documentation',
                     categories: [
@@ -699,7 +699,7 @@
                     ]
                 };
             }
-            
+
             // Cargar categorías en sidebar
             const categoriesNav = document.getElementById('categoriesNav');
             if (settings.categories) {
@@ -712,28 +712,28 @@
                     categoriesNav.appendChild(item);
                 });
             }
-            
+
             initializeDashboardUI();
             renderPage('home');
         }
-        
+
         function initializeDashboardUI() {
             const menuToggle = document.getElementById('menuToggle');
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            
+
             menuToggle.addEventListener('click', () => {
                 menuToggle.classList.toggle('active');
                 sidebar.classList.toggle('active');
                 overlay.classList.toggle('active');
             });
-            
+
             overlay.addEventListener('click', () => {
                 menuToggle.classList.remove('active');
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
-            
+
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const page = item.dataset.page;
@@ -746,48 +746,49 @@
                     overlay.classList.remove('active');
                 });
             });
-            
+
             document.getElementById('logoutBtn').addEventListener('click', logout);
         }
-        
+
         function renderPage(page, category = null) {
             if (page !== 'status' && uptimeInterval) {
                 clearInterval(uptimeInterval);
                 uptimeInterval = null;
             }
-            
+
             const content = document.getElementById('mainContent');
             if (page === 'home') renderHome(content);
             else if (page === 'status') renderStatus(content);
             else if (page === 'category') renderCategory(content, category);
             else if (page === 'all') renderAllEndpoints(content);
         }
-        
+
         function renderHome(container) {
             container.innerHTML = `
                 <div style="text-align:center; padding:40px 20px;">
-                    <h1 style="font-size:42px; font-weight:600;">${settings.name || 'CACAROTO API'}</h1>
+                    <h1 style="font-size:42px; font-weight:600;">${settings.name || 'API GOHAN'}</h1>
                     <div style="display:inline-block; background:#2c2c2c; color:white; padding:6px 16px; border-radius:20px; margin:20px 0;">${settings.version || 'v1.0'}</div>
                     <p style="font-size:18px; color:#666;">${settings.description || 'API Documentation'}</p>
                     <div style="background:linear-gradient(135deg, #667eea, #764ba2); padding:30px; border-radius:15px; color:white; margin-top:30px;">
                         <h3>👋 Bienvenido, ${currentUser.fullName}!</h3>
-                        <p>Has iniciado sesión correctamente en Gohan Api</p>
+                        <p>Has iniciado sesión correctamente en API GOHAN</p>
+                        <p style="margin-top:15px; font-size:14px; opacity:0.9;">© 2024 - 2026 DV WILKER</p>
                     </div>
                 </div>
             `;
         }
-        
+
         async function renderStatus(container) {
             container.innerHTML = `
                 <h2 style="font-size:28px; margin-bottom:30px;">API Status <span style="background:#28a745; color:white; padding:5px 12px; border-radius:30px; font-size:13px; margin-left:15px;">🔴 LIVE</span></h2>
                 <div class="status-grid" id="statusGrid"></div>
             `;
-            
+
             try {
                 const response = await fetch('/status');
                 const data = await response.json();
                 uptimeSeconds = data.uptime_seconds || 0;
-                
+
                 const grid = document.getElementById('statusGrid');
                 grid.innerHTML = `
                     <div class="status-card"><div class="status-card-title">Status</div><div class="status-card-value" style="color:#28a745;">Online</div></div>
@@ -807,11 +808,11 @@
                 document.getElementById('statusGrid').innerHTML = '<p>Error cargando status</p>';
                 if (!uptimeSeconds) uptimeSeconds = Math.floor(Date.now() / 1000) - (sessionStorage.getItem('api_start') || Date.now()/1000);
             }
-            
+
             updateUptimeDisplay();
             uptimeInterval = setInterval(() => { uptimeSeconds++; updateUptimeDisplay(); }, 1000);
         }
-        
+
         function updateUptimeDisplay() {
             const days = Math.floor(uptimeSeconds / 86400);
             const hours = Math.floor((uptimeSeconds % 86400) / 3600);
@@ -822,13 +823,13 @@
             else if (hours > 0) display = `${hours}h ${minutes}m ${secs}s`;
             else if (minutes > 0) display = `${minutes}m ${secs}s`;
             else display = `${secs}s`;
-            
+
             const el = document.getElementById('uptimeDisplay');
             const secEl = document.getElementById('uptimeSeconds');
             if (el) el.textContent = display;
             if (secEl) secEl.textContent = `${uptimeSeconds.toLocaleString()} segundos`;
         }
-        
+
         function renderCategory(container, categoryName) {
             const category = settings.categories?.find(c => c.name === categoryName);
             if (!category) return;
@@ -848,7 +849,7 @@
             `;
             setupSearchAndButtons();
         }
-        
+
         function renderAllEndpoints(container) {
             let html = `<input type="text" class="search-input" placeholder="Buscar endpoints..." id="searchInput">`;
             settings.categories?.forEach(cat => {
@@ -864,7 +865,7 @@
             container.innerHTML = html;
             setupSearchAndButtons();
         }
-        
+
         function setupSearchAndButtons() {
             const searchInput = document.getElementById('searchInput');
             if (searchInput) {
@@ -891,7 +892,7 @@
                 });
             });
         }
-        
+
         async function makeApiRequest(url) {
             const loading = document.getElementById('loadingContainer');
             const responseDiv = document.getElementById('responseContainer');
@@ -920,13 +921,13 @@
             }
             loading.style.display = 'none';
         }
-        
+
         // Inicializar eventos de autenticación
         document.getElementById('doLoginBtn')?.addEventListener('click', loginUser);
         document.getElementById('doRegisterBtn')?.addEventListener('click', registerUser);
         document.getElementById('showRegisterLink')?.addEventListener('click', showRegisterForm);
         document.getElementById('showLoginLink')?.addEventListener('click', showLoginForm);
-        
+
         // Verificar sesión al cargar
         checkSession();
     </script>
