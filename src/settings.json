@@ -1,12 +1,10 @@
 {
-  "name": "Api'Gohan",
+  "name": "Api-gohan",
   "version": "1.0.2",
-  "description": "Todo lo que imaginas, un request de distancia.",
+  "description": "API con descargas de YouTube y TikTok",
   "header": {
     "status": "ONLINE",
-    "imageSrc": [
-      "https://files.catbox.moe/v7gddq.jpg"
-    ],
+    "imageSrc": ["https://files.catbox.moe/pnp8hg.jpg"],
     "imageSize": {
       "mobile": "80%",
       "tablet": "40%",
@@ -19,34 +17,53 @@
   },
   "links": [
     {
-      "name": "Source Code",
-      "url": "https://github.com/WILKER-OFC/Api-Cacaroto"
-    },
-    {
-      "name": "Contact Me",
-      "url": "https://wa.me/584125877491"
+      "name": "GitHub",
+      "url": "https://github.com/dvwilker/Api-Gohan"
     }
   ],
   "categories": [
     {
-      "name": "AI (Artificial Intelligence)",
+      "name": "Download",
+      "items": [
+        {
+          "name": "YouTube MP3",
+          "desc": "Download YouTube audio as MP3",
+          "path": "/download/ytmp3?url="
+        },
+        {
+          "name": "YouTube MP4",
+          "desc": "Download YouTube video as MP4",
+          "path": "/download/ytmp4?url="
+        },
+        {
+          "name": "TikTok Downloader",
+          "desc": "Download TikTok video without watermark",
+          "path": "/download/tiktok?url="
+        }
+      ]
+    },
+    {
+      "name": "Search",
+      "items": [
+        {
+          "name": "Search TikTok",
+          "desc": "Search TikTok videos",
+          "path": "/search/tiktok?q="
+        },
+        {
+          "name": "Search YouTube",
+          "desc": "Search YouTube videos",
+          "path": "/search/youtube?q="
+        }
+      ]
+    },
+    {
+      "name": "AI",
       "items": [
         {
           "name": "LuminAI",
-          "desc": "Talk with luminai",
+          "desc": "Chat with AI",
           "path": "/ai/luminai?text="
-        },
-        {
-          "name": "HydroMind",
-          "desc": "Talk with hydromind",
-          "path": "/ai/hydromind?text=&model=",
-          "innerDesc": "See the list of supported AI models here: https://mind.hydrooo.web.id"
-        },
-        {
-          "name": "Suno AI",
-          "desc": "Generate music with SunoAI ",
-          "path": "/ai/sunoai?prompt=",
-          "innerDesc": "Generate music in multiple languages and of any style with Suno AI."
         }
       ]
     },
@@ -55,43 +72,8 @@
       "items": [
         {
           "name": "Blue Archive",
-          "desc": "Blue Archive Random Images",
+          "desc": "Random Blue Archive image",
           "path": "/random/ba"
-        }
-      ]
-    },
-    {
-      "name": "Search Tools",
-      "items": [
-        {
-          "name": "YouTube",
-          "desc": "Video search",
-          "path": "/search/youtube?q="
-        },
-        {
-          "name": "TikTok Search",
-          "desc": "Search TikTok videos",
-          "path": "/search/tiktok?query="
-        }
-      ]
-    },
-    {
-      "name": "Download",
-      "items": [
-        {
-          "name": "YouTube MP3",
-          "desc": "Download YouTube videos as MP3 audio",
-          "path": "/download/ytmp3?url="
-        },
-        {
-          "name": "YouTube MP4",
-          "desc": "Download YouTube videos as MP4 video",
-          "path": "/download/ytmp4?url="
-        },
-        {
-          "name": "TikTok",
-          "desc": "Download TikTok videos without watermark",
-          "path": "/download/tiktok?url="
         }
       ]
     }
