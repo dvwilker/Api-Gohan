@@ -1,11 +1,11 @@
 {
-  "name": "Cacaroto'Api",
+  "name": "Api'Gohan",
   "version": "1.0.2",
   "description": "Todo lo que imaginas, un request de distancia.",
   "header": {
     "status": "ONLINE",
     "imageSrc": [
-      "https://files.catbox.moe/pnp8hg.jpg"
+      "https://files.catbox.moe/v7gddq.jpg"
     ],
     "imageSize": {
       "mobile": "80%",
