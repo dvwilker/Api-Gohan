@@ -1,7 +1,7 @@
 {
-  "name": "Api-gohan",
+  "name": "Api-Gohan",
   "version": "1.0.2",
-  "description": "API con descargas de YouTube y TikTok",
+  "description": "API con descargas de YouTube, TikTok y herramientas de IA",
   "header": {
     "status": "ONLINE",
     "imageSrc": ["https://files.catbox.moe/pnp8hg.jpg"],
@@ -19,61 +19,112 @@
     {
       "name": "GitHub",
       "url": "https://github.com/dvwilker/Api-Gohan"
+    },
+    {
+      "name": "Contact Me",
+      "url": "https://wa.me/584125877491"
     }
   ],
   "categories": [
     {
-      "name": "Download",
+      "name": "📥 Download",
       "items": [
         {
           "name": "YouTube MP3",
           "desc": "Download YouTube audio as MP3",
-          "path": "/download/ytmp3?url="
+          "path": "/download/ytmp3?url=",
+          "innerDesc": "🎵 Download audio from YouTube\n\nUsage: ?url=YOUTUBE_URL\nDownload: &download=true"
         },
         {
           "name": "YouTube MP4",
           "desc": "Download YouTube video as MP4",
-          "path": "/download/ytmp4?url="
+          "path": "/download/ytmp4?url=",
+          "innerDesc": "🎬 Download video from YouTube\n\nParameters:\n• url - YouTube URL\n• quality - 360, 720, 1080\n• download=true - Direct download"
         },
         {
           "name": "TikTok Downloader",
           "desc": "Download TikTok video without watermark",
-          "path": "/download/tiktok?url="
+          "path": "/download/tiktok?url=",
+          "innerDesc": "📱 Download TikTok videos without watermark\n\nUsage: ?url=TIKTOK_URL\nDownload: &download=true"
         }
       ]
     },
     {
-      "name": "Search",
+      "name": "🔍 Search",
       "items": [
-        {
-          "name": "Search TikTok",
-          "desc": "Search TikTok videos",
-          "path": "/search/tiktok?q="
-        },
         {
           "name": "Search YouTube",
           "desc": "Search YouTube videos",
-          "path": "/search/youtube?q="
+          "path": "/search/youtube?q=",
+          "innerDesc": "🔎 Search YouTube videos\n\nUsage: ?q=SEARCH_QUERY"
+        },
+        {
+          "name": "Search TikTok",
+          "desc": "Search TikTok videos",
+          "path": "/search/tiktok?q=",
+          "innerDesc": "🔎 Search TikTok videos\n\nUsage: ?q=SEARCH_QUERY"
         }
       ]
     },
     {
-      "name": "AI",
+      "name": "🤖 AI (Artificial Intelligence)",
       "items": [
         {
           "name": "LuminAI",
-          "desc": "Chat with AI",
-          "path": "/ai/luminai?text="
+          "desc": "Chat with LuminAI assistant",
+          "path": "/ai/luminai?text=",
+          "innerDesc": "💬 Talk with AI\n\nUsage: ?text=YOUR_MESSAGE"
+        },
+        {
+          "name": "HydroMind",
+          "desc": "Chat with HydroMind AI",
+          "path": "/ai/hydromind?text=&model=",
+          "innerDesc": "🧠 AI with multiple models\n\nParameters:\n• text - Your message\n• model - AI model to use"
+        },
+        {
+          "name": "Suno AI",
+          "desc": "Generate music with Suno AI",
+          "path": "/ai/sunoai?prompt=",
+          "innerDesc": "🎵 Generate AI music\n\nUsage: ?prompt=YOUR_PROMPT"
         }
       ]
     },
     {
-      "name": "Api test",
+      "name": "🎨 Maker (Creators)",
       "items": [
         {
-          "name": "api-test",
-          "desc": "Api funcional test",
-          "path": "/test/yt"
+          "name": "BRAT Image",
+          "desc": "Generate BRAT style image",
+          "path": "/maker/brat?text=",
+          "innerDesc": "🎨 Create BRAT style images\n\nParameters:\n• text - Text to display (required)\n• background - Hex color (optional)\n• color - Text hex color (optional)\n\nExample: ?text=HOLA&background=%23000000&color=%23FFFFFF"
+        },
+        {
+          "name": "BRAT Video",
+          "desc": "Generate BRAT style video",
+          "path": "/maker/bratvid?text=",
+          "innerDesc": "🎬 Create BRAT style videos\n\nParameters:\n• text - Text to display (required)\n• background - Hex color (optional)\n• color - Text hex color (optional)"
+        }
+      ]
+    },
+    {
+      "name": "🎲 Random",
+      "items": [
+        {
+          "name": "Blue Archive",
+          "desc": "Random Blue Archive images",
+          "path": "/random/ba",
+          "innerDesc": "🎮 Get random Blue Archive character images"
+        }
+      ]
+    },
+    {
+      "name": "🛠️ Tools",
+      "items": [
+        {
+          "name": "API Status",
+          "desc": "Check API status and system info",
+          "path": "/status",
+          "innerDesc": "📊 View API status, uptime, requests, and system information"
         }
       ]
     }
