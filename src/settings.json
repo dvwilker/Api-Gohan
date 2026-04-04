@@ -4,7 +4,7 @@
   "description": "API con descargas de YouTube, TikTok y herramientas de IA",
   "header": {
     "status": "ONLINE",
-    "imageSrc": ["https://files.catbox.moe/pnp8hg.jpg"],
+    "imageSrc": ["https://telegra.ph/file/3b3b2c4d3b3b2c4d3b3b2.jpg"],
     "imageSize": {
       "mobile": "80%",
       "tablet": "40%",
@@ -13,7 +13,7 @@
   },
   "apiSettings": {
     "creator": "DVWILKER",
-    "limit": "500"
+    "limit": "2500"
   },
   "links": [
     {
@@ -30,16 +30,16 @@
       "name": "📥 Download",
       "items": [
         {
-          "name": "YouTube MP3",
-          "desc": "Download YouTube audio as MP3",
-          "path": "/download/ytmp3?url=",
-          "innerDesc": "🎵 Download audio from YouTube\n\nUsage: ?url=YOUTUBE_URL\nDownload: &download=true"
+          "name": "YouTube MP3 (Y2Mate)",
+          "desc": "Download YouTube audio as MP3 via Y2Mate",
+          "path": "/download/y2mate?url=",
+          "innerDesc": "🎵 Download audio from YouTube\n\nParameters:\n• url - YouTube URL\n• format=mp3 (default)\n• quality - 128 (kbps)\n• download=true - Direct download\n\nExample: ?url=YOUTUBE_URL&format=mp3&download=true"
         },
         {
-          "name": "YouTube MP4",
-          "desc": "Download YouTube video as MP4",
-          "path": "/download/ytmp4?url=",
-          "innerDesc": "🎬 Download video from YouTube\n\nParameters:\n• url - YouTube URL\n• quality - 360, 720, 1080\n• download=true - Direct download"
+          "name": "YouTube MP4 (Y2Mate)",
+          "desc": "Download YouTube video as MP4 via Y2Mate",
+          "path": "/download/y2mate?url=",
+          "innerDesc": "🎬 Download video from YouTube\n\nParameters:\n• url - YouTube URL\n• format=mp4\n• quality - 360, 720\n• download=true - Direct download\n\nExample: ?url=YOUTUBE_URL&format=mp4&quality=720&download=true"
         },
         {
           "name": "TikTok Downloader",
