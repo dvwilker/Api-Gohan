@@ -32,7 +32,7 @@
         {
           "name": "YouTube MP3",
           "desc": "Download YouTube audio as MP3",
-          "path": "/download/ytmp3?url=",
+          "path": "/download/ytaudio?url=",
           "innerDesc": "🎵 Download audio from YouTube\n\nUsage: ?url=YOUTUBE_URL\nDownload: &download=true"
         },
         {
