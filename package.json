@@ -21,7 +21,6 @@
     "node-fetch": "^2.6.1",
     "systeminformation": "*",
     "yt-search": "^2.12.1",
-    "ytdl-core": "^4.11.5"
   },
   "engines": {
     "node": "18.x"
