@@ -4,7 +4,7 @@
   "description": "API con descargas de YouTube, TikTok y herramientas de IA",
   "header": {
     "status": "ONLINE",
-    "imageSrc": ["https://telegra.ph/file/9e6e3c6b3d6e3c6b3d6e3.jpg"],
+    "imageSrc": ["https://raw.githubusercontent.com/JTxs00/uploads/main/1775363351744.jpeg"],
     "imageSize": {
       "mobile": "80%",
       "tablet": "40%",
@@ -13,7 +13,7 @@
   },
   "apiSettings": {
     "creator": "DVWILKER",
-    "limit": "2500"
+    "limit": "500"
   },
   "links": [
     {
