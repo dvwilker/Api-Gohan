@@ -4,7 +4,7 @@
   "description": "API con descargas de YouTube, TikTok y herramientas de IA",
   "header": {
     "status": "ONLINE",
-    "imageSrc": ["https://telegra.ph/file/3b3b2c4d3b3b2c4d3b3b2.jpg"],
+    "imageSrc": ["https://telegra.ph/file/9e6e3c6b3d6e3c6b3d6e3.jpg"],
     "imageSize": {
       "mobile": "80%",
       "tablet": "40%",
@@ -30,22 +30,22 @@
       "name": "📥 Download",
       "items": [
         {
-          "name": "YouTube MP3 (Y2Mate)",
-          "desc": "Download YouTube audio as MP3 via Y2Mate",
-          "path": "/download/y2mate?url=",
-          "innerDesc": "🎵 Download audio from YouTube\n\nParameters:\n• url - YouTube URL\n• format=mp3 (default)\n• quality - 128 (kbps)\n• download=true - Direct download\n\nExample: ?url=YOUTUBE_URL&format=mp3&download=true"
+          "name": "YouTube MP3",
+          "desc": "Download YouTube audio as MP3",
+          "path": "/download/ytmp3?url=",
+          "innerDesc": "🎵 Descarga el audio de cualquier video de YouTube en formato MP3.\n\nUso:\n• Añade el parámetro 'url' con el enlace del video.\n• Añade '&download=true' para iniciar la descarga directa.\n\nEjemplo:\n/download/ytmp3?url=https://youtu.be/...&download=true"
         },
         {
-          "name": "YouTube MP4 (Y2Mate)",
-          "desc": "Download YouTube video as MP4 via Y2Mate",
-          "path": "/download/y2mate?url=",
-          "innerDesc": "🎬 Download video from YouTube\n\nParameters:\n• url - YouTube URL\n• format=mp4\n• quality - 360, 720\n• download=true - Direct download\n\nExample: ?url=YOUTUBE_URL&format=mp4&quality=720&download=true"
+          "name": "YouTube MP4",
+          "desc": "Download YouTube video as MP4",
+          "path": "/download/ytmp4?url=",
+          "innerDesc": "🎬 Descarga el video de YouTube en formato MP4.\n\nParámetros:\n• url (requerido): Enlace del video.\n• quality (opcional): 360, 720, 1080. Por defecto: 720.\n• download=true (opcional): Inicia la descarga directa.\n\nEjemplo:\n/download/ytmp4?url=https://youtu.be/...&quality=720&download=true"
         },
         {
           "name": "TikTok Downloader",
           "desc": "Download TikTok video without watermark",
           "path": "/download/tiktok?url=",
-          "innerDesc": "📱 Download TikTok videos without watermark\n\nUsage: ?url=TIKTOK_URL\nDownload: &download=true"
+          "innerDesc": "📱 Descarga videos de TikTok sin marca de agua.\n\nUso:\n• Añade el parámetro 'url' con el enlace del video.\n• Añade '&download=true' para iniciar la descarga directa.\n\nEjemplo:\n/download/tiktok?url=https://www.tiktok.com/@usuario/video/...&download=true"
         }
       ]
     },
@@ -56,13 +56,13 @@
           "name": "Search YouTube",
           "desc": "Search YouTube videos",
           "path": "/search/youtube?q=",
-          "innerDesc": "🔎 Search YouTube videos\n\nUsage: ?q=SEARCH_QUERY"
+          "innerDesc": "🔎 Busca videos en YouTube.\n\nUso:\n• Añade el parámetro 'q' con tu consulta.\n\nEjemplo:\n/search/youtube?q=rick astley"
         },
         {
           "name": "Search TikTok",
           "desc": "Search TikTok videos",
           "path": "/search/tiktok?q=",
-          "innerDesc": "🔎 Search TikTok videos\n\nUsage: ?q=SEARCH_QUERY"
+          "innerDesc": "🔎 Busca videos en TikTok.\n\nUso:\n• Añade el parámetro 'q' con tu consulta.\n\nEjemplo:\n/search/tiktok?q=musica"
         }
       ]
     },
@@ -73,19 +73,19 @@
           "name": "LuminAI",
           "desc": "Chat with LuminAI assistant",
           "path": "/ai/luminai?text=",
-          "innerDesc": "💬 Talk with AI\n\nUsage: ?text=YOUR_MESSAGE"
+          "innerDesc": "💬 Chatea con la asistente de IA LuminAI.\n\nUso:\n• Añade el parámetro 'text' con tu mensaje.\n\nEjemplo:\n/ai/luminai?text=Hola, ¿cómo estás?"
         },
         {
           "name": "HydroMind",
           "desc": "Chat with HydroMind AI",
           "path": "/ai/hydromind?text=&model=",
-          "innerDesc": "🧠 AI with multiple models\n\nParameters:\n• text - Your message\n• model - AI model to use"
+          "innerDesc": "🧠 Chatea con HydroMind, una IA con múltiples modelos.\n\nParámetros:\n• text (requerido): Tu mensaje.\n• model (requerido): El modelo de IA a usar.\n\nEjemplo:\n/ai/hydromind?text=Hola&model=gpt-3.5"
         },
         {
           "name": "Suno AI",
           "desc": "Generate music with Suno AI",
           "path": "/ai/sunoai?prompt=",
-          "innerDesc": "🎵 Generate AI music\n\nUsage: ?prompt=YOUR_PROMPT"
+          "innerDesc": "🎵 Genera música con inteligencia artificial usando Suno AI.\n\nUso:\n• Añade el parámetro 'prompt' con una descripción de la música que deseas.\n\nEjemplo:\n/ai/sunoai?prompt=una canción de cuna relajante"
         }
       ]
     },
@@ -96,13 +96,13 @@
           "name": "BRAT Image",
           "desc": "Generate BRAT style image",
           "path": "/maker/brat?text=",
-          "innerDesc": "🎨 Create BRAT style images\n\nParameters:\n• text - Text to display (required)\n• background - Hex color (optional)\n• color - Text hex color (optional)\n\nExample: ?text=HOLA&background=%23000000&color=%23FFFFFF"
+          "innerDesc": "🎨 Genera una imagen al estilo BRAT con tu texto personalizado.\n\nParámetros:\n• text (requerido): El texto que aparecerá en la imagen.\n• background (opcional): Color de fondo en hex, ej. %23000000.\n• color (opcional): Color del texto en hex, ej. %23FFFFFF.\n\nEjemplo:\n/maker/brat?text=HOLA&background=%23000000&color=%23FFFFFF"
         },
         {
           "name": "BRAT Video",
           "desc": "Generate BRAT style video",
           "path": "/maker/bratvid?text=",
-          "innerDesc": "🎬 Create BRAT style videos\n\nParameters:\n• text - Text to display (required)\n• background - Hex color (optional)\n• color - Text hex color (optional)"
+          "innerDesc": "🎬 Genera un video al estilo BRAT con tu texto personalizado.\n\nParámetros:\n• text (requerido): El texto que aparecerá en el video.\n• background (opcional): Color de fondo en hex, ej. %23000000.\n• color (opcional): Color del texto en hex, ej. %23FFFFFF.\n\nEjemplo:\n/maker/bratvid?text=BIENVENIDOS"
         }
       ]
     },
@@ -113,7 +113,7 @@
           "name": "Blue Archive",
           "desc": "Random Blue Archive images",
           "path": "/random/ba",
-          "innerDesc": "🎮 Get random Blue Archive character images"
+          "innerDesc": "🎮 Obtén una imagen aleatoria de personajes de Blue Archive.\n\nUso:\nSolo realiza una petición GET al endpoint.\n\nEjemplo:\n/random/ba"
         }
       ]
     },
@@ -124,7 +124,7 @@
           "name": "API Status",
           "desc": "Check API status and system info",
           "path": "/status",
-          "innerDesc": "📊 View API status, uptime, requests, and system information"
+          "innerDesc": "📊 Muestra el estado de la API, tiempo de actividad, número de peticiones, información del sistema y más.\n\nUso:\nSolo realiza una petición GET al endpoint.\n\nEjemplo:\n/status"
         }
       ]
     }
