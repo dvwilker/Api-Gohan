@@ -38,7 +38,7 @@
         {
           "name": "YouTube MP4",
           "desc": "Download YouTube video as MP4",
-          "path": "/download/ytmp4?url=",
+          "path": "/download/ytvideo?url=",
           "innerDesc": "🎬 Download video from YouTube\n\nParameters:\n• url - YouTube URL\n• quality - 360, 720, 1080\n• download=true - Direct download"
         },
         {
