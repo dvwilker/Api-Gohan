@@ -6,6 +6,7 @@ const path = require('path')
 const os = require('os')
 const si = require('systeminformation')
 const axios = require('axios')
+const fileUpload = require('express-fileupload') // 👈 NUEVO: Para subir archivos
 
 const app = express()
 const PORT = process.env.PORT || 10005
@@ -15,6 +16,14 @@ app.set("json spaces", 2)
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cors())
+
+// 👈 NUEVO: Configuración para subir archivos (CDN)
+app.use(fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB máximo
+    useTempFiles: false,
+    abortOnLimit: true
+}))
+
 app.use('/', express.static(path.join(__dirname, 'api-page')))
 app.use('/src', express.static(path.join(__dirname, 'src')))
 
@@ -150,6 +159,14 @@ app.get('/status', async (req, res) => {
                 speed: n.speed
             }))
         }
+    })
+})
+
+// 👈 NUEVO: Endpoint para verificar variables de entorno (útil para debug)
+app.get('/env-check', (req, res) => {
+    res.json({
+        youtube_api_key_configured: !!process.env.YOUTUBE_API_KEY,
+        node_env: process.env.NODE_ENV || 'development'
     })
 })
 
