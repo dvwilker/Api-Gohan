@@ -118,6 +118,17 @@
       ]
     },
     {
+      "name": "☁️ CDN",
+      "items": [
+        {
+          "name": "Gohan File CDN",
+          "desc": "Upload files to Gohan File CDN",
+          "path": "/cdn/gohan-file",
+          "innerDesc": "📤 Sube archivos al CDN de Gohan File\n\nMétodo: POST\nFormato: multipart/form-data\nParámetro: file (el archivo a subir)\n\nEjemplo:\ncurl -X POST -F \"file=@archivo.jpg\" /cdn/gohan-file"
+        }
+      ]
+    },
+    {
       "name": "🛠️ Tools",
       "items": [
         {
