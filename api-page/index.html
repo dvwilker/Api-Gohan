@@ -979,8 +979,8 @@
             <button class="music-toggle-min" id="toggleMinimize">−</button>
         </div>
         <div class="music-info">
-            <div class="song-name" id="songName">Cancerbero - Épico</div>
-            <div class="artist-name" id="artistName">Cancerbero</div>
+            <div class="song-name" id="songName">Neutro Shorty, Big Soto - Latin Lover</div>
+            <div class="artist-name" id="artistName">Neutro Shorty, Big Soto</div>
         </div>
         <div class="progress-container" id="progressContainer">
             <div class="progress-bar" id="progressBar"></div>
@@ -1121,14 +1121,14 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // ============ REPRODUCTOR DE MÚSICA ============
+        // ============ REPRODUCTOR DE MÚSICA CON TUS CANCIONES ============
         const playlist = [
-            { name: "Épico", artist: "Cancerbero", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-            { name: "Maquiavélico", artist: "Cancerbero", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-            { name: "Jeremías 17", artist: "Cancerbero", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
-            { name: "Eoo", artist: "Bad Bunny", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
-            { name: "Odisea", artist: "Ozuna", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" },
-            { name: "Soy Yo", artist: "Neutro Shorty", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" }
+            { name: "Latin Lover", artist: "Neutro Shorty, Big Soto", url: "http://gohan-file-cdn.onrender.com/f/11297eae2e0dd01c.mp3" },
+            { name: "El La Engaño Lambada", artist: "Natusha", url: "http://gohan-file-cdn.onrender.com/f/a0e34e0121cc3115.mp3" },
+            { name: "Quédate", artist: "Belee", url: "http://gohan-file-cdn.onrender.com/f/a839677129434e04.mp3" },
+            { name: "Odisea", artist: "Ozuna", url: "http://gohan-file-cdn.onrender.com/f/c556da301813d72a.mp3" },
+            { name: "Maquiavélico", artist: "Cancerbero", url: "http://gohan-file-cdn.onrender.com/f/bd79c2f1e0780807.mp3" },
+            { name: "Eoo", artist: "Bad Bunny", url: "http://gohan-file-cdn.onrender.com/f/43e95fb820a53571.mp3" }
         ];
 
         let currentSongIndex = 0;
@@ -1150,12 +1150,12 @@
 
         function loadSong(index) {
             const song = playlist[index];
-            songNameEl.textContent = `${song.name}`;
+            songNameEl.textContent = song.name;
             artistNameEl.textContent = song.artist;
             audio.src = song.url;
             audio.load();
             if (isPlaying) {
-                audio.play();
+                audio.play().catch(e => console.log('Error playing:', e));
             }
             updatePlayPauseIcon();
         }
@@ -1172,7 +1172,7 @@
             if (isPlaying) {
                 audio.pause();
             } else {
-                audio.play();
+                audio.play().catch(e => console.log('Error playing:', e));
             }
             isPlaying = !isPlaying;
             updatePlayPauseIcon();
@@ -1195,7 +1195,7 @@
         }
 
         function updateProgress() {
-            if (audio.duration) {
+            if (audio.duration && !isNaN(audio.duration)) {
                 const percent = (audio.currentTime / audio.duration) * 100;
                 progressBar.style.width = `${percent}%`;
                 currentTimeEl.textContent = formatTime(audio.currentTime);
