@@ -7,8 +7,6 @@
     <title id="pageTitle">API GOHAN</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"/>
-    <!-- Cloudflare Turnstile -->
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
         * {
             margin: 0;
@@ -209,7 +207,7 @@
             background: #ffffff;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 480px;
+            max-width: 450px;
             width: 100%;
             overflow: hidden;
             animation: slideUp 0.5s ease;
@@ -296,12 +294,6 @@
             box-shadow: 0 5px 20px rgba(102,126,234,0.4);
         }
 
-        .btn-auth:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
         .switch-link {
             text-align: center;
             margin-top: 20px;
@@ -343,12 +335,6 @@
         .strength-weak { color: #dc3545; }
         .strength-medium { color: #ffc107; }
         .strength-strong { color: #28a745; }
-
-        .captcha-container {
-            margin: 20px 0;
-            display: flex;
-            justify-content: center;
-        }
 
         /* Top Bar */
         .top-bar {
@@ -1032,10 +1018,6 @@
                         <label>Contraseña</label>
                         <input type="password" class="form-control" id="loginPassword" placeholder="••••••••">
                     </div>
-                    <!-- Cloudflare Turnstile -->
-                    <div class="captcha-container">
-                        <div class="cf-turnstile" data-sitekey="0x4AAAAAAA_ygllSTXBygOQY"></div>
-                    </div>
                     <button class="btn-auth" id="doLoginBtn">Iniciar sesión</button>
                     <div class="switch-link">
                         ¿No tienes cuenta? <a id="showRegisterLink">Crear cuenta</a>
@@ -1059,10 +1041,6 @@
                     <div class="form-group">
                         <label>Confirmar contraseña</label>
                         <input type="password" class="form-control" id="regConfirmPassword" placeholder="••••••••">
-                    </div>
-                    <!-- Cloudflare Turnstile -->
-                    <div class="captcha-container">
-                        <div class="cf-turnstile" data-sitekey="0x4AAAAAAA_ygllSTXBygOQY"></div>
                     </div>
                     <button class="btn-auth" id="doRegisterBtn">Crear cuenta</button>
                     <div class="switch-link">
@@ -1260,13 +1238,12 @@
         // Cargar primera canción
         loadSong(0);
 
-        // ============ SISTEMA DE AUTENTICACIÓN CON TURNSTILE ============
+        // ============ SISTEMA DE AUTENTICACIÓN ============
         let currentUser = null;
         let settings = {};
         let currentPage = 'home';
         let uptimeSeconds = 0;
         let uptimeInterval = null;
-        let turnstileVerified = false;
 
         // Verificar si hay sesión guardada
         function checkSession() {
@@ -1299,7 +1276,6 @@
             showAuth();
         }
 
-        // Registrar usuario con validación de Turnstile
         function registerUser() {
             const fullName = document.getElementById('regFullName').value.trim();
             const email = document.getElementById('regEmail').value.trim();
@@ -1310,14 +1286,6 @@
             const successDiv = document.getElementById('authSuccess');
             errorDiv.style.display = 'none';
             successDiv.style.display = 'none';
-
-            // Verificar Turnstile (opcional - solo cliente)
-            const turnstileResponse = document.querySelector('#registerForm .cf-turnstile textarea')?.value;
-            if (!turnstileResponse) {
-                errorDiv.textContent = 'Por favor completa el captcha de seguridad';
-                errorDiv.style.display = 'block';
-                return;
-            }
 
             if (!fullName || !email || !password) {
                 errorDiv.textContent = 'Por favor completa todos los campos';
@@ -1382,14 +1350,6 @@
             const errorDiv = document.getElementById('authError');
             errorDiv.style.display = 'none';
 
-            // Verificar Turnstile (opcional - solo cliente)
-            const turnstileResponse = document.querySelector('#loginForm .cf-turnstile textarea')?.value;
-            if (!turnstileResponse) {
-                errorDiv.textContent = 'Por favor completa el captcha de seguridad';
-                errorDiv.style.display = 'block';
-                return;
-            }
-
             if (!email || !password) {
                 errorDiv.textContent = 'Ingresa tu correo y contraseña';
                 errorDiv.style.display = 'block';
@@ -1414,20 +1374,12 @@
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('registerForm').style.display = 'block';
             document.getElementById('authSubtitle').textContent = 'Crear cuenta';
-            // Resetear Turnstile al cambiar de formulario
-            if (typeof turnstile !== 'undefined') {
-                turnstile.reset();
-            }
         }
 
         function showLoginForm() {
             document.getElementById('loginForm').style.display = 'block';
             document.getElementById('registerForm').style.display = 'none';
             document.getElementById('authSubtitle').textContent = 'Iniciar sesión';
-            // Resetear Turnstile al cambiar de formulario
-            if (typeof turnstile !== 'undefined') {
-                turnstile.reset();
-            }
         }
 
         document.getElementById('regPassword')?.addEventListener('input', function() {
