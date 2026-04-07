@@ -6,8 +6,6 @@ const path = require('path')
 const os = require('os')
 const si = require('systeminformation')
 const axios = require('axios')
-const fileUpload = require('express-fileupload');
-app.use(fileUpload());
 
 const app = express()
 const PORT = process.env.PORT || 10005
