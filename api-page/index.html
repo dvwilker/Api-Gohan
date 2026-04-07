@@ -52,6 +52,142 @@
             border-top-color: #2c2c2c;
         }
 
+        /* Music Player Flotante */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 320px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 15px;
+            padding: 15px;
+            z-index: 10000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .music-player.minimized {
+            width: 50px;
+            padding: 10px;
+            border-radius: 25px;
+        }
+
+        .music-player.minimized .music-info,
+        .music-player.minimized .music-controls,
+        .music-player.minimized .progress-container {
+            display: none;
+        }
+
+        .music-player.minimized .music-toggle-min {
+            transform: rotate(180deg);
+        }
+
+        .music-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .music-title {
+            font-size: 14px;
+            font-weight: 600;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+
+        .music-toggle-min {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0 5px;
+        }
+
+        .music-info {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .song-name {
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .artist-name {
+            color: rgba(255,255,255,0.7);
+            font-size: 11px;
+        }
+
+        .progress-container {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 4px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            background: #e74c3c;
+            border-radius: 10px;
+            height: 100%;
+            width: 0%;
+            position: relative;
+            transition: width 0.1s linear;
+        }
+
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255,255,255,0.6);
+            font-size: 10px;
+            margin-bottom: 10px;
+        }
+
+        .music-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .control-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .control-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.05);
+        }
+
+        .control-btn.play-btn {
+            background: #e74c3c;
+            width: 45px;
+            height: 45px;
+        }
+
+        .control-btn.play-btn:hover {
+            background: #c0392b;
+        }
+
         /* Login/Register Styles */
         .auth-container {
             min-height: 100vh;
@@ -818,6 +954,12 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+
+            .music-player {
+                width: 280px;
+                bottom: 10px;
+                right: 10px;
+            }
         }
     </style>
 </head>
@@ -829,6 +971,32 @@
         </div>
         <p style="margin-top: 16px; color: #666;">Loading...</p>
     </div>
+
+    <!-- Reproductor de Música Flotante -->
+    <div class="music-player" id="musicPlayer">
+        <div class="music-header">
+            <span class="music-title">🎵 MUSIC PLAYER</span>
+            <button class="music-toggle-min" id="toggleMinimize">−</button>
+        </div>
+        <div class="music-info">
+            <div class="song-name" id="songName">Cancerbero - Épico</div>
+            <div class="artist-name" id="artistName">Cancerbero</div>
+        </div>
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="time-info">
+            <span id="currentTime">0:00</span>
+            <span id="duration">0:00</span>
+        </div>
+        <div class="music-controls">
+            <button class="control-btn" id="prevBtn">⏮</button>
+            <button class="control-btn play-btn" id="playPauseBtn">▶</button>
+            <button class="control-btn" id="nextBtn">⏭</button>
+        </div>
+    </div>
+
+    <audio id="audioPlayer" style="display: none;"></audio>
 
     <!-- Pantalla de Login/Registro -->
     <div id="authContainer" class="auth-container">
@@ -953,6 +1121,123 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // ============ REPRODUCTOR DE MÚSICA ============
+        const playlist = [
+            { name: "Épico", artist: "Cancerbero", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
+            { name: "Maquiavélico", artist: "Cancerbero", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
+            { name: "Jeremías 17", artist: "Cancerbero", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
+            { name: "Eoo", artist: "Bad Bunny", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
+            { name: "Odisea", artist: "Ozuna", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" },
+            { name: "Soy Yo", artist: "Neutro Shorty", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" }
+        ];
+
+        let currentSongIndex = 0;
+        let isPlaying = false;
+        let isMinimized = false;
+
+        const audio = document.getElementById('audioPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const songNameEl = document.getElementById('songName');
+        const artistNameEl = document.getElementById('artistName');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        const toggleMinimize = document.getElementById('toggleMinimize');
+        const musicPlayer = document.getElementById('musicPlayer');
+
+        function loadSong(index) {
+            const song = playlist[index];
+            songNameEl.textContent = `${song.name}`;
+            artistNameEl.textContent = song.artist;
+            audio.src = song.url;
+            audio.load();
+            if (isPlaying) {
+                audio.play();
+            }
+            updatePlayPauseIcon();
+        }
+
+        function updatePlayPauseIcon() {
+            if (isPlaying) {
+                playPauseBtn.innerHTML = '⏸';
+            } else {
+                playPauseBtn.innerHTML = '▶';
+            }
+        }
+
+        function playPause() {
+            if (isPlaying) {
+                audio.pause();
+            } else {
+                audio.play();
+            }
+            isPlaying = !isPlaying;
+            updatePlayPauseIcon();
+        }
+
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % playlist.length;
+            loadSong(currentSongIndex);
+            if (!isPlaying) {
+                playPause();
+            }
+        }
+
+        function prevSong() {
+            currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+            loadSong(currentSongIndex);
+            if (!isPlaying) {
+                playPause();
+            }
+        }
+
+        function updateProgress() {
+            if (audio.duration) {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                progressBar.style.width = `${percent}%`;
+                currentTimeEl.textContent = formatTime(audio.currentTime);
+                durationEl.textContent = formatTime(audio.duration);
+            }
+        }
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function setProgress(e) {
+            const rect = progressContainer.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = percent * audio.duration;
+        }
+
+        function toggleMinimizePlayer() {
+            isMinimized = !isMinimized;
+            if (isMinimized) {
+                musicPlayer.classList.add('minimized');
+                toggleMinimize.textContent = '+';
+            } else {
+                musicPlayer.classList.remove('minimized');
+                toggleMinimize.textContent = '−';
+            }
+        }
+
+        playPauseBtn.addEventListener('click', playPause);
+        nextBtn.addEventListener('click', nextSong);
+        prevBtn.addEventListener('click', prevSong);
+        audio.addEventListener('timeupdate', updateProgress);
+        audio.addEventListener('ended', nextSong);
+        progressContainer.addEventListener('click', setProgress);
+        toggleMinimize.addEventListener('click', toggleMinimizePlayer);
+
+        // Cargar primera canción
+        loadSong(0);
+
         // ============ SISTEMA DE AUTENTICACIÓN ============
         let currentUser = null;
         let settings = {};
@@ -981,7 +1266,6 @@
         function showAuth() {
             document.getElementById('authContainer').style.display = 'flex';
             document.getElementById('dashboardContainer').style.display = 'none';
-            // Limpiar formularios
             document.getElementById('loginEmail').value = '';
             document.getElementById('loginPassword').value = '';
         }
@@ -992,7 +1276,6 @@
             showAuth();
         }
 
-        // Registrar usuario
         function registerUser() {
             const fullName = document.getElementById('regFullName').value.trim();
             const email = document.getElementById('regEmail').value.trim();
@@ -1099,7 +1382,6 @@
             document.getElementById('authSubtitle').textContent = 'Iniciar sesión';
         }
 
-        // Verificar fuerza de contraseña
         document.getElementById('regPassword')?.addEventListener('input', function() {
             const password = this.value;
             const strengthDiv = document.getElementById('passwordStrength');
@@ -1130,7 +1412,6 @@
                 document.title = settings.name || 'API GOHAN';
                 document.getElementById('apiName').textContent = settings.name || 'API GOHAN';
 
-                // Top links
                 const topLinksContainer = document.getElementById('topLinks');
                 if (settings.links && settings.links.length > 0) {
                     settings.links.forEach(link => {
@@ -1149,7 +1430,6 @@
                     });
                 }
 
-                // Categories navigation
                 const categoriesNav = document.getElementById('categoriesNav');
                 if (settings.categories) {
                     settings.categories.forEach(category => {
@@ -1171,7 +1451,6 @@
         }
 
         function initializeUI() {
-            // Menu toggle
             const menuToggle = document.getElementById('menuToggle');
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
@@ -1188,7 +1467,6 @@
                 overlay.classList.remove('active');
             });
 
-            // Sidebar navigation
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const page = item.dataset.page;
@@ -1209,7 +1487,6 @@
                 });
             });
 
-            // Scroll effect
             window.addEventListener('scroll', () => {
                 const topBar = document.querySelector('.top-bar');
                 if (window.scrollY > 0) {
