@@ -76,10 +76,16 @@
           "innerDesc": "💬 Talk with AI\n\nUsage: ?text=YOUR_MESSAGE"
         },
         {
-          "name": "Gemini Ai",
-          "desc": "Chat with gemini Google",
-          "path": "/ai/gemini?text=&model=",
-          "innerDesc": "🧠 AI with multiple models\n\nParameters:\n• text - Your message\n• model - AI model to use"
+          "name": "Gemini AI",
+          "desc": "Chat with Gemini Google AI",
+          "path": "/ai/gemini?text=",
+          "innerDesc": "🧠 Chat with Google Gemini AI\n\nParameters:\n• text - Your message\n\nExample: /ai/gemini?text=Hola"
+        },
+        {
+          "name": "DvWilk AI",
+          "desc": "Chat with DvWilk AI (Gemini)",
+          "path": "/ai/dvwilker?text=",
+          "innerDesc": "🤖 Asistente virtual DvWilk AI basado en Gemini\n\nCaracterísticas:\n• Responde preguntas\n• Conversaciones naturales\n• Soporta contexto\n• En español\n\nUsage: ?text=TU_PREGUNTA\nContinue: &continue=true"
         },
         {
           "name": "Suno AI",
