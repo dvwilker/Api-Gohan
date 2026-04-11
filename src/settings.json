@@ -76,9 +76,9 @@
           "innerDesc": "💬 Talk with AI\n\nUsage: ?text=YOUR_MESSAGE"
         },
         {
-          "name": "HydroMind",
-          "desc": "Chat with HydroMind AI",
-          "path": "/ai/hydromind?text=&model=",
+          "name": "Gemini Ai",
+          "desc": "Chat with gemini Google",
+          "path": "/ai/gemini?text=&model=",
           "innerDesc": "🧠 AI with multiple models\n\nParameters:\n• text - Your message\n• model - AI model to use"
         },
         {
