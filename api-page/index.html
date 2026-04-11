@@ -675,6 +675,12 @@
             color: #2c2c2c;
         }
 
+        .status-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #28a745;
+        }
+
         .uptime-value {
             font-family: 'Monaco', 'Courier New', monospace;
             font-size: 28px;
@@ -1122,7 +1128,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // ============ REPRODUCTOR DE MÚSICA ============
-        // Lista de reproducción completa con las nuevas canciones
         const playlist = [
             { name: "Latin Lover", artist: "Neutro Shorty, Big Soto", url: "https://o.uguu.se/xZmpzUnR.mpeg" },
             { name: "El La Engaño Lambada", artist: "Natusha", url: "https://h.uguu.se/DshGuXiM.mpeg" },
@@ -1238,15 +1243,49 @@
         progressContainer.addEventListener('click', setProgress);
         toggleMinimize.addEventListener('click', toggleMinimizePlayer);
 
-        // Cargar primera canción
         loadSong(0);
 
-        // ============ SISTEMA DE AUTENTICACIÓN ============
+        // ============ SISTEMA DE AUTENTICACIÓN CON CONTADORES EN TIEMPO REAL ============
         let currentUser = null;
         let settings = {};
         let currentPage = 'home';
         let uptimeSeconds = 0;
         let uptimeInterval = null;
+        let statusUpdateInterval = null;
+
+        // Variables para los contadores en tiempo real
+        let totalRegisteredUsers = 0;
+        let totalEndpointRequests = 0;
+
+        // Función para actualizar los contadores en tiempo real
+        function updateRealTimeCounters() {
+            // Obtener número de usuarios registrados
+            const users = JSON.parse(localStorage.getItem('api_gohan_users') || '[]');
+            totalRegisteredUsers = users.length;
+            
+            // Obtener número de requests a endpoints
+            totalEndpointRequests = parseInt(localStorage.getItem('api_gohan_total_requests') || '0');
+            
+            // Actualizar en la página de status si está visible
+            const usersCountEl = document.getElementById('realTimeUsers');
+            const requestsCountEl = document.getElementById('realTimeRequests');
+            
+            if (usersCountEl) {
+                usersCountEl.textContent = totalRegisteredUsers;
+            }
+            if (requestsCountEl) {
+                requestsCountEl.textContent = totalEndpointRequests;
+            }
+        }
+
+        // Función para incrementar requests de endpoints
+        function incrementEndpointRequest() {
+            let current = parseInt(localStorage.getItem('api_gohan_total_requests') || '0');
+            current++;
+            localStorage.setItem('api_gohan_total_requests', current);
+            totalEndpointRequests = current;
+            updateRealTimeCounters();
+        }
 
         // Verificar si hay sesión guardada
         function checkSession() {
@@ -1264,6 +1303,12 @@
             document.getElementById('dashboardContainer').style.display = 'block';
             document.getElementById('userNameDisplay').textContent = currentUser.fullName;
             loadSettings();
+            
+            // Iniciar actualización de contadores en tiempo real
+            if (statusUpdateInterval) clearInterval(statusUpdateInterval);
+            statusUpdateInterval = setInterval(() => {
+                updateRealTimeCounters();
+            }, 1000);
         }
 
         function showAuth() {
@@ -1271,6 +1316,11 @@
             document.getElementById('dashboardContainer').style.display = 'none';
             document.getElementById('loginEmail').value = '';
             document.getElementById('loginPassword').value = '';
+            
+            if (statusUpdateInterval) {
+                clearInterval(statusUpdateInterval);
+                statusUpdateInterval = null;
+            }
         }
 
         function logout() {
@@ -1332,6 +1382,9 @@
 
             users.push(newUser);
             localStorage.setItem('api_gohan_users', JSON.stringify(users));
+            
+            // Actualizar contador en tiempo real
+            updateRealTimeCounters();
 
             successDiv.textContent = '¡Cuenta creada! Ahora inicia sesión';
             successDiv.style.display = 'block';
@@ -1406,7 +1459,7 @@
             strengthDiv.innerHTML = `Fortaleza: <span class="${classname}">${text}</span>`;
         });
 
-        // ============ API DASHBOARD ORIGINAL ============
+        // ============ API DASHBOARD ============
         async function loadSettings() {
             try {
                 const response = await fetch('/src/settings.json');
@@ -1451,6 +1504,9 @@
             initializeUI();
             renderPage('home');
             hideLoading();
+            
+            // Inicializar contadores
+            updateRealTimeCounters();
         }
 
         function initializeUI() {
@@ -1570,12 +1626,14 @@
                         <div class="status-card-small" id="uptimeSeconds">0 segundos activo</div>
                     </div>
                     <div class="status-card">
-                        <div class="status-card-title">Total Requests</div>
-                        <div class="status-card-value" id="totalRequests">--</div>
+                        <div class="status-card-title">📊 TOTAL REQUESTS</div>
+                        <div class="status-card-value status-number" id="realTimeRequests">0</div>
+                        <div class="status-card-small">Endpoint requests en tiempo real</div>
                     </div>
                     <div class="status-card">
-                        <div class="status-card-title">Active Users</div>
-                        <div class="status-card-value" id="activeUsers">--</div>
+                        <div class="status-card-title">👥 USERS REGISTERED</div>
+                        <div class="status-card-value status-number" id="realTimeUsers">0</div>
+                        <div class="status-card-small">Usuarios registrados en tiempo real</div>
                     </div>
                     <div class="status-card">
                         <div class="status-card-title">Daily Limit</div>
@@ -1611,13 +1669,14 @@
                 </div>
             `;
 
+            // Actualizar contadores en tiempo real
+            updateRealTimeCounters();
+
             try {
                 const response = await fetch('/status');
                 const data = await response.json();
 
                 uptimeSeconds = data.uptime_seconds || 0;
-                document.getElementById('totalRequests').textContent = data.total_requests || 0;
-                document.getElementById('activeUsers').textContent = data.active_users || 0;
                 document.getElementById('dailyLimit').textContent = data.daily_limit || 'N/A';
                 document.getElementById('routesLoaded').textContent = data.routes_loaded || 0;
                 document.getElementById('apiLatency').textContent = `${data.api_latency_ms || 0}ms`;
@@ -1854,6 +1913,9 @@
             endpointBox.style.display = 'block';
             loadingContainer.style.display = 'block';
             responseContainer.innerHTML = '';
+
+            // Incrementar contador de requests
+            incrementEndpointRequest();
 
             try {
                 const response = await fetch(url);
