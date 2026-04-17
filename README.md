@@ -11,7 +11,7 @@ A redesigned and upgraded edition of **Rynn UI** with a smoother user interface,
 
 ## Live Demo
 
-Check out a live demo of NefuAPI
+Check out a live demo of Api Gohan
 [here](api.nefu.life)
 
 ## Setup
@@ -41,7 +41,7 @@ Your API documentation should now be available at `http://localhost:<PORT>`.
 
 ### General Settings
 
-- `name`: Sets the name of your API (e.g., "MayAPI").
+- `name`: Sets the name of your API (e.g., "AdonixApi").
 - `version`: Specifies the version of your API interface (e.g., "1.0.0").
 - `description`: A brief description of your API documentation.
 
