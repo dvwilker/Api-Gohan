@@ -29,29 +29,18 @@
   ],
   "categories": [
     {
-      "name": "AI (Artificial Intelligence)",
+      "name": "🤖 AI (Artificial Intelligence)",
       "items": [
         {
-          "name": "LuminAI",
-          "desc": "Talk with luminai",
-          "path": "/ai/luminai?text="
-        },
-        {
-          "name": "HydroMind",
-          "desc": "Talk with hydromind",
-          "path": "/ai/hydromind?text=&model=",
-          "innerDesc": "See the list of supported AI models here: https://mind.hydrooo.web.id"
-        },
-         {
-          "name": "Suno AI",
-          "desc": "Generate music with SunoAI ",
-          "path": "/ai/sunoai?prompt=",
-          "innerDesc": "Generate music in multiple languages and of any style with Suno AI."
-         }
+          "name": "Gemini AI",
+          "desc": "Chat with Gemini Google AI",
+          "path": "/ai/gemini?text=",
+          "innerDesc": "🧠 Chat with Google Gemini AI\n\nExample: /ai/gemini?text=Hola"
+        }
       ]
     },
     {
-      "name": "Random",
+      "name": "🎲 Random",
       "items": [
         {
           "name": "Blue Archive",
@@ -61,12 +50,23 @@
       ]
     },
     {
-      "name": "Search Tools",
+      "name": "🔍 Search Tools",
       "items": [
         {
           "name": "YouTube",
           "desc": "Video search",
           "path": "/search/youtube?q="
+        }
+      ]
+    },
+    {
+      "name": "📥 Download",
+      "items": [
+        {
+          "name": "YouTube Audio",
+          "desc": "Download YouTube audio as MP3",
+          "path": "/download/ytaudio?url=",
+          "innerDesc": "🎵 Download audio from YouTube\n\nUsage: ?url=YOUTUBE_URL\nDownload: &download=true"
         }
       ]
     }
