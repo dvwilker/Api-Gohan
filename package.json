@@ -1,5 +1,5 @@
 {
-  "name": "Api-Gohan",
+  "name": "ApiGohan",
   "version": "1.0.2",
   "description": "A simple and customizable API documentation interface built with Express.js.",
   "main": "index.js",
@@ -7,19 +7,23 @@
   "scripts": {
     "start": "node --no-deprecation index.js"
   },
-  "author": "Dev-Wilker",
+  "author": "DVWILKER",
   "license": "MIT",
   "dependencies": {
     "axios": "^1.6.8",
+    "axios-cookiejar-support": "^4.0.6",
     "body-parser": "^1.20.3",
+    "chalk": "^4.1.2",
     "cheerio": "^1.0.0",
     "cors": "^2.8.5",
-    "chalk": "^4.1.2",
     "express": "^4.19.2",
-    "systeminformation": "*",
+    "express-fileupload": "^1.4.3",
+    "form-data": "^4.0.0",
     "fs": "^0.0.1-security",
     "https": "^1.0.0",
     "node-fetch": "^2.6.1",
+    "systeminformation": "*",
+    "tough-cookie": "^4.1.3",
     "yt-search": "^2.12.1"
   }
 }
