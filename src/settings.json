@@ -1,7 +1,7 @@
 {
   "name": "Api-Gohan",
   "version": "1.0.2",
-  "description": "API con descargas de YouTube, TikTok y herramientas de IA",
+  "description": "API con descargas busquedas y más creada por Dvwilker",
   "header": {
     "status": "ONLINE",
     "imageSrc": ["https://files.catbox.moe/v7gddq.jpg"],
