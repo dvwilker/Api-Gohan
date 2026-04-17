@@ -1,10 +1,12 @@
 {
-  "name": "Api-Gohan",
+  "name": "GohanApi",
   "version": "1.0.2",
-  "description": "API con descargas busquedas y más creada por Dvwilker",
+  "description": "Todo lo que imaginas, un request de distancia.",
   "header": {
     "status": "ONLINE",
-    "imageSrc": ["https://files.catbox.moe/v7gddq.jpg"],
+    "imageSrc": [
+      "https://files.catbox.moe/wg9ysl.png"
+    ],
     "imageSize": {
       "mobile": "80%",
       "tablet": "40%",
@@ -12,131 +14,59 @@
     }
   },
   "apiSettings": {
-    "creator": "DVWILKER",
-    "limit": "1500"
+    "creator": "dvwilker",
+    "limit": "5500"
   },
   "links": [
     {
-      "name": "GitHub",
-      "url": "https://github.com/dvwilker/Api-Gohan"
+      "name": "Source Code",
+      "url": "https://github.com/dvwilker/Api-Gohan/"
     },
     {
       "name": "Contact Me",
-      "url": "https://wa.me/584125877491"
+      "url": "https://wa.me/5492644138998"
     }
   ],
   "categories": [
     {
-      "name": "📥 Download",
-      "items": [
-        {
-          "name": "YouTube MP3",
-          "desc": "Download YouTube audio as MP3",
-          "path": "/api/download/ytaudio?url=",
-          "innerDesc": "🎵 Download audio from YouTube\n\nUsage: ?url=YOUTUBE_URL\nDownload: &download=true"
-        },
-        {
-          "name": "YouTube MP4",
-          "desc": "Download YouTube video as MP4",
-          "path": "/api/download/ytvideo?url=",
-          "innerDesc": "🎬 Download video from YouTube\n\nParameters:\n• url - YouTube URL\n• quality - 360, 720, 1080\n• download=true - Direct download"
-        },
-        {
-          "name": "TikTok Downloader",
-          "desc": "Download TikTok video without watermark",
-          "path": "/api/download/tiktok?url=",
-          "innerDesc": "📱 Download TikTok videos without watermark\n\nUsage: ?url=TIKTOK_URL\nDownload: &download=true"
-        },
-        {
-          "name": "Facebook Downloader",
-          "desc": "Download Facebook videos",
-          "path": "/api/download/facebook?url=",
-          "innerDesc": "📘 Download videos from Facebook\n\nParameters:\n• url - Facebook post URL (requerido)\n• cookie - Facebook cookie (opcional)\n• useragent - Custom user agent (opcional)\n• download=true - Descarga directa"
-        }
-      ]
-    },
-    {
-      "name": "🔍 Search",
-      "items": [
-        {
-          "name": "Search YouTube",
-          "desc": "Search YouTube videos",
-          "path": "/api/search/youtube?q=",
-          "innerDesc": "🔎 Search YouTube videos\n\nUsage: ?q=SEARCH_QUERY"
-        },
-        {
-          "name": "Search TikTok",
-          "desc": "Search TikTok videos",
-          "path": "/api/search/tiktok?q=",
-          "innerDesc": "🔎 Search TikTok videos\n\nUsage: ?q=SEARCH_QUERY"
-        },
-        {
-          "name": "Lyrics Finder",
-          "desc": "Search song lyrics by artist and title",
-          "path": "/api/search/lyrics?artist=&song=",
-          "innerDesc": "🎤 Busca la letra completa de canciones\n\nParámetros:\n• artist - Nombre del artista\n• song - Nombre de la canción\n• q - Formato \"Artista - Canción\""
-        }
-      ]
-    },
-    {
-      "name": "🤖 AI (Artificial Intelligence)",
+      "name": "AI (Artificial Intelligence)",
       "items": [
         {
           "name": "LuminAI",
-          "desc": "Chat with LuminAI assistant",
-          "path": "/api/ai/luminai?text=",
-          "innerDesc": "💬 Talk with AI\n\nUsage: ?text=YOUR_MESSAGE"
+          "desc": "Talk with luminai",
+          "path": "/ai/luminai?text="
         },
         {
-          "name": "Gemini AI",
-          "desc": "Chat with Gemini Google AI",
-          "path": "/api/ai/gemini?text=",
-          "innerDesc": "🧠 Chat with Google Gemini AI\n\nExample: /ai/gemini?text=Hola"
+          "name": "HydroMind",
+          "desc": "Talk with hydromind",
+          "path": "/ai/hydromind?text=&model=",
+          "innerDesc": "See the list of supported AI models here: https://mind.hydrooo.web.id"
         },
-        {
-          "name": "DvWilk AI",
-          "desc": "Chat with DvWilk AI (Gemini)",
-          "path": "/api/ai/dvwilker?text=",
-          "innerDesc": "🤖 Asistente virtual DvWilk AI\n\nUsage: ?text=TU_PREGUNTA\nContinue: &continue=true"
-        },
-        {
+         {
           "name": "Suno AI",
-          "desc": "Generate music with Suno AI",
-          "path": "/api/ai/sunoai?prompt=",
-          "innerDesc": "🎵 Generate AI music\n\nUsage: ?prompt=YOUR_PROMPT"
-        }
+          "desc": "Generate music with SunoAI ",
+          "path": "/ai/sunoai?prompt=",
+          "innerDesc": "Generate music in multiple languages and of any style with Suno AI."
+         }
       ]
     },
     {
-      "name": "🎨 Maker (Creators)",
-      "items": [
-        {
-          "name": "BRAT Image",
-          "desc": "Generate BRAT style image",
-          "path": "/api/maker/brat?text=",
-          "innerDesc": "🎨 Create BRAT style images\n\nParameters:\n• text - Text to display (required)\n• background - Hex color (optional)\n• color - Text hex color (optional)"
-        }
-      ]
-    },
-    {
-      "name": "🎲 Random",
+      "name": "Random",
       "items": [
         {
           "name": "Blue Archive",
-          "desc": "Random Blue Archive images",
-          "path": "/api/random/ba",
-          "innerDesc": "🎮 Get random Blue Archive character images"
+          "desc": "Blue Archive Random Images",
+          "path": "/random/ba"
         }
       ]
     },
     {
-      "name": "☁️ Upload",
+      "name": "Search Tools",
       "items": [
         {
-          "name": "Yotsuba Uploader",
-          "desc": "Upload files to Yotsuba CDN",
-          "path": "/api/upload/yotsuba",
-          "innerDesc": "📤 Sube archivos a Yotsuba Uploaded\n\nMétodo: POST\nFormato: multipart/form-data\nParámetro: file\nLímite: 100MB"
+          "name": "YouTube",
+          "desc": "Video search",
+          "path": "/search/youtube?q="
         }
       ]
     }
