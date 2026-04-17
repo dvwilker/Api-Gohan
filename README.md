@@ -1,4 +1,4 @@
-![Logo](https://files.catbox.moe/v7gddq)
+![Logo](https://files.catbox.moe/v7gddq.jpg)
 
 A redesigned and upgraded edition of **Rynn UI** with a smoother user interface, optimized user experience, and extended API endpoint support.
 
