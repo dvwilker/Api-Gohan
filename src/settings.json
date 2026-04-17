@@ -5,7 +5,7 @@
   "header": {
     "status": "ONLINE",
     "imageSrc": [
-      "https://files.catbox.moe/v7gddq.jpg"
+      "https://files.catbox.moe/wg9ysl.png"
     ],
     "imageSize": {
       "mobile": "80%",
@@ -67,6 +67,24 @@
           "desc": "Download YouTube audio as MP3",
           "path": "/download/ytaudio?url=",
           "innerDesc": "🎵 Download audio from YouTube\n\nUsage: ?url=YOUTUBE_URL\nDownload: &download=true"
+        },
+        {
+          "name": "YouTube Video",
+          "desc": "Download YouTube video as MP4",
+          "path": "/download/ytvideo?url=",
+          "innerDesc": "🎬 Download video from YouTube\n\nParameters:\n• url - YouTube URL\n• quality - 360, 720, 1080\n• download=true - Direct download"
+        },
+        {
+          "name": "TikTok Downloader",
+          "desc": "Download TikTok video without watermark",
+          "path": "/download/tiktok?url=",
+          "innerDesc": "📱 Download TikTok videos without watermark\n\nUsage: ?url=TIKTOK_URL\nDownload: &download=true"
+        },
+        {
+          "name": "Facebook Downloader",
+          "desc": "Download Facebook videos",
+          "path": "/download/facebook?url=",
+          "innerDesc": "📘 Download videos from Facebook\n\nParameters:\n• url - Facebook post URL\n• cookie - Facebook cookie (opcional)\n• useragent - Custom user agent (opcional)\n• download=true - Descarga directa"
         }
       ]
     }
