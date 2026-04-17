@@ -1,5 +1,5 @@
 {
-  "name": "nefuapi",
+  "name": "Api-Gohan",
   "version": "1.0.2",
   "description": "A simple and customizable API documentation interface built with Express.js.",
   "main": "index.js",
