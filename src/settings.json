@@ -29,17 +29,18 @@
   ],
   "categories": [
     {
-      "name": "AI (Artificial Intelligence)",
+      "name": "⏬ DOWNLOAD",
       "items": [
         {
-          "name": "LuminAI",
-          "desc": "Talk with luminai",
-          "path": "/ai/luminai?text="
+          "name": "YOUTUBE MP3",
+          "desc": "Download YouTube Audio as MP3",
+          "path": "/download/ytaudio?url="
+          "innerDesc":"🎵 Download audio from YouTube\n\nUsage:url=YOUTUBE_URL\nDownload: &download=true"
         },
         {
-          "name": "HydroMind",
-          "desc": "Talk with hydromind",
-          "path": "/ai/hydromind?text=&model=",
+          "name": "YOUTUBE MP4",
+          "desc": "Download YouTube VIDEO as MP4",
+          "path": "/download/ytvideo?url=&model=",
           "innerDesc": "See the list of supported AI models here: https://mind.hydrooo.web.id"
         },
          {
