@@ -52,6 +52,142 @@
             border-top-color: #2c2c2c;
         }
 
+        /* Music Player Flotante */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 320px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 15px;
+            padding: 15px;
+            z-index: 10000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .music-player.minimized {
+            width: 50px;
+            padding: 10px;
+            border-radius: 25px;
+        }
+
+        .music-player.minimized .music-info,
+        .music-player.minimized .music-controls,
+        .music-player.minimized .progress-container {
+            display: none;
+        }
+
+        .music-player.minimized .music-toggle-min {
+            transform: rotate(180deg);
+        }
+
+        .music-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .music-title {
+            font-size: 14px;
+            font-weight: 600;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+
+        .music-toggle-min {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0 5px;
+        }
+
+        .music-info {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .song-name {
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .artist-name {
+            color: rgba(255,255,255,0.7);
+            font-size: 11px;
+        }
+
+        .progress-container {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 4px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            background: #e74c3c;
+            border-radius: 10px;
+            height: 100%;
+            width: 0%;
+            position: relative;
+            transition: width 0.1s linear;
+        }
+
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255,255,255,0.6);
+            font-size: 10px;
+            margin-bottom: 10px;
+        }
+
+        .music-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .control-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .control-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.05);
+        }
+
+        .control-btn.play-btn {
+            background: #e74c3c;
+            width: 45px;
+            height: 45px;
+        }
+
+        .control-btn.play-btn:hover {
+            background: #c0392b;
+        }
+
         /* Top Bar */
         .top-bar {
             position: fixed;
@@ -569,6 +705,12 @@
             .main-content {
                 padding: 20px 15px;
             }
+
+            .music-player {
+                width: 280px;
+                bottom: 10px;
+                right: 10px;
+            }
         }
     </style>
 </head>
@@ -580,6 +722,32 @@
         </div>
         <p style="margin-top: 16px; color: #666;">Loading...</p>
     </div>
+
+    <!-- Reproductor de Música Flotante -->
+    <div class="music-player" id="musicPlayer">
+        <div class="music-header">
+            <span class="music-title">🎵 MUSIC PLAYER</span>
+            <button class="music-toggle-min" id="toggleMinimize">−</button>
+        </div>
+        <div class="music-info">
+            <div class="song-name" id="songName">Cargando...</div>
+            <div class="artist-name" id="artistName">---</div>
+        </div>
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="time-info">
+            <span id="currentTime">0:00</span>
+            <span id="duration">0:00</span>
+        </div>
+        <div class="music-controls">
+            <button class="control-btn" id="prevBtn">⏮</button>
+            <button class="control-btn play-btn" id="playPauseBtn">▶</button>
+            <button class="control-btn" id="nextBtn">⏭</button>
+        </div>
+    </div>
+
+    <audio id="audioPlayer" style="display: none;"></audio>
 
     <!-- Top Bar -->
     <div class="top-bar">
@@ -644,6 +812,126 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // ============ REPRODUCTOR DE MÚSICA ============
+        const playlist = [
+            { name: "Latin Lover", artist: "Neutro Shorty, Big Soto", url: "https://raw.githubusercontent.com/JTxs00/uploads/main/1775936364197.mpeg" },
+            { name: "El La Engaño Lambada", artist: "Natusha", url: "https://raw.githubusercontent.com/JTxs00/uploads/main/1775936787983.mpeg" },
+            { name: "Quédate", artist: "Belee", url: "https://raw.githubusercontent.com/JTxs00/uploads/main/1775936643238.mpeg" },
+            { name: "Odisea", artist: "Ozuna", url: "https://raw.githubusercontent.com/JTxs00/uploads/main/1775935979163.mpeg" },
+            { name: "Maquiavélico", artist: "Cancerbero", url: "https://raw.githubusercontent.com/JTxs00/uploads/main/1775936827892.mpeg" },
+            { name: "Eoo", artist: "Bad Bunny", url: "https://raw.githubusercontent.com/JTxs00/uploads/main/1775936322243.mpeg" },
+            { name: "Los Viejos Me Llaman", artist: "No Name", url: "https://raw.githubusercontent.com/JTxs00/uploads/main/1775936897844.mpeg" },
+            { name: "Ninfómana", artist: "Jossimar ft El Apóstol", url: "https://raw.githubusercontent.com/JTxs00/uploads/main/1775936920447.mpeg" }
+        ];
+
+        let currentSongIndex = 0;
+        let isPlaying = false;
+        let isMinimized = false;
+
+        const audio = document.getElementById('audioPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const songNameEl = document.getElementById('songName');
+        const artistNameEl = document.getElementById('artistName');
+        const progressBar = document.getElementById('progressBar');
+        const progressContainer = document.getElementById('progressContainer');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        const toggleMinimize = document.getElementById('toggleMinimize');
+        const musicPlayer = document.getElementById('musicPlayer');
+
+        function loadSong(index) {
+            const song = playlist[index];
+            songNameEl.textContent = song.name;
+            artistNameEl.textContent = song.artist;
+            audio.src = song.url;
+            audio.load();
+            if (isPlaying) {
+                audio.play().catch(e => console.log('Error playing:', e));
+            }
+            updatePlayPauseIcon();
+        }
+
+        function updatePlayPauseIcon() {
+            if (isPlaying) {
+                playPauseBtn.innerHTML = '⏸';
+            } else {
+                playPauseBtn.innerHTML = '▶';
+            }
+        }
+
+        function playPause() {
+            if (isPlaying) {
+                audio.pause();
+            } else {
+                audio.play().catch(e => console.log('Error playing:', e));
+            }
+            isPlaying = !isPlaying;
+            updatePlayPauseIcon();
+        }
+
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % playlist.length;
+            loadSong(currentSongIndex);
+            if (!isPlaying) {
+                playPause();
+            }
+        }
+
+        function prevSong() {
+            currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+            loadSong(currentSongIndex);
+            if (!isPlaying) {
+                playPause();
+            }
+        }
+
+        function updateProgress() {
+            if (audio.duration && !isNaN(audio.duration)) {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                progressBar.style.width = `${percent}%`;
+                currentTimeEl.textContent = formatTime(audio.currentTime);
+                durationEl.textContent = formatTime(audio.duration);
+            }
+        }
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return "0:00";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function setProgress(e) {
+            const rect = progressContainer.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = percent * audio.duration;
+        }
+
+        function toggleMinimizePlayer() {
+            isMinimized = !isMinimized;
+            if (isMinimized) {
+                musicPlayer.classList.add('minimized');
+                toggleMinimize.textContent = '+';
+            } else {
+                musicPlayer.classList.remove('minimized');
+                toggleMinimize.textContent = '−';
+            }
+        }
+
+        playPauseBtn.addEventListener('click', playPause);
+        nextBtn.addEventListener('click', nextSong);
+        prevBtn.addEventListener('click', prevSong);
+        audio.addEventListener('timeupdate', updateProgress);
+        audio.addEventListener('ended', nextSong);
+        progressContainer.addEventListener('click', setProgress);
+        toggleMinimize.addEventListener('click', toggleMinimizePlayer);
+
+        // Cargar primera canción
+        loadSong(0);
+
+        // ============ API DASHBOARD ORIGINAL ============
         let settings = {};
         let currentPage = 'home';
 
@@ -658,11 +946,11 @@
             try {
                 const response = await fetch('/src/settings.json');
                 settings = await response.json();
-                
+
                 document.getElementById('pageTitle').textContent = settings.name || 'API';
                 document.getElementById('apiName').textContent = settings.name || 'API';
                 document.getElementById('footerText').textContent = `Created by ${settings.apiSettings?.creator || 'Unknown'}`;
-                
+
                 // Top links
                 const topLinksContainer = document.getElementById('topLinks');
                 if (settings.links && settings.links.length > 0) {
@@ -681,7 +969,7 @@
                         topLinksContainer.appendChild(a);
                     });
                 }
-                
+
                 // Categories navigation
                 const categoriesNav = document.getElementById('categoriesNav');
                 if (settings.categories) {
@@ -704,40 +992,40 @@
             const menuToggle = document.getElementById('menuToggle');
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            
+
             menuToggle.addEventListener('click', () => {
                 menuToggle.classList.toggle('active');
                 sidebar.classList.toggle('active');
                 overlay.classList.toggle('active');
             });
-            
+
             overlay.addEventListener('click', () => {
                 menuToggle.classList.remove('active');
                 sidebar.classList.remove('active');
                 overlay.classList.remove('active');
             });
-            
+
             // Sidebar navigation
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const page = item.dataset.page;
                     const category = item.dataset.category;
-                    
+
                     document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
                     item.classList.add('active');
-                    
+
                     if (page === 'category') {
                         renderPage('category', category);
                     } else {
                         renderPage(page);
                     }
-                    
+
                     menuToggle.classList.remove('active');
                     sidebar.classList.remove('active');
                     overlay.classList.remove('active');
                 });
             });
-            
+
             // Scroll effect
             window.addEventListener('scroll', () => {
                 const topBar = document.querySelector('.top-bar');
@@ -752,7 +1040,7 @@
         function renderPage(page, category = null) {
             currentPage = page;
             const content = document.getElementById('mainContent');
-            
+
             switch (page) {
                 case 'home':
                     renderHomePage(content);
@@ -773,7 +1061,7 @@
             const imageSrc = Array.isArray(settings.header.imageSrc) && settings.header.imageSrc.length > 0
                 ? settings.header.imageSrc[Math.floor(Math.random() * settings.header.imageSrc.length)]
                 : '';
-            
+
             container.innerHTML = `
                 <div class="home-banner">
                     ${imageSrc ? `<img src="${imageSrc}" alt="${settings.name}" style="max-width: ${settings.header.imageSize?.desktop || '40%'}">` : ''}
@@ -786,11 +1074,11 @@
 
         async function renderStatusPage(container) {
             container.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="spinner-border"></div></div>';
-            
+
             try {
                 const response = await fetch('/status');
                 const data = await response.json();
-                
+
                 container.innerHTML = `
                     <h2 style="font-size: 28px; font-weight: 600; margin-bottom: 30px;">API Status</h2>
                     <div class="status-grid">
@@ -855,9 +1143,9 @@
         function renderCategoryPage(container, categoryName) {
             const category = settings.categories.find(c => c.name === categoryName);
             if (!category) return;
-            
+
             const sortedItems = [...category.items].sort((a, b) => a.name.localeCompare(b.name));
-            
+
             container.innerHTML = `
                 <div class="search-box">
                     <input type="text" class="search-input" placeholder="Search endpoints..." id="searchInput">
@@ -869,7 +1157,7 @@
                     </div>
                 </div>
             `;
-            
+
             setupSearch();
             setupEndpointButtons();
         }
@@ -881,11 +1169,11 @@
                 </div>
                 <div id="allCategories"></div>
             `;
-            
+
             const allCategories = document.getElementById('allCategories');
             settings.categories.forEach(category => {
                 const sortedItems = [...category.items].sort((a, b) => a.name.localeCompare(b.name));
-                
+
                 allCategories.innerHTML += `
                     <div class="category-section" data-category="${category.name}">
                         <h2 class="category-title">${category.name}</h2>
@@ -895,7 +1183,7 @@
                     </div>
                 `;
             });
-            
+
             setupSearch();
             setupEndpointButtons();
         }
@@ -917,19 +1205,19 @@
         function setupSearch() {
             const searchInput = document.getElementById('searchInput');
             if (!searchInput) return;
-            
+
             searchInput.addEventListener('input', (e) => {
                 const term = e.target.value.toLowerCase();
                 const cards = document.querySelectorAll('.endpoint-card');
                 const sections = document.querySelectorAll('.category-section');
-                
+
                 cards.forEach(card => {
                     const name = card.dataset.name;
                     const desc = card.dataset.desc;
                     const matches = name.includes(term) || desc.includes(term);
                     card.style.display = matches ? '' : 'none';
                 });
-                
+
                 sections.forEach(section => {
                     const visibleCards = section.querySelectorAll('.endpoint-card:not([style*="display: none"])');
                     section.style.display = visibleCards.length > 0 ? '' : 'none';
@@ -944,7 +1232,7 @@
                     const name = btn.dataset.name;
                     const desc = btn.dataset.desc;
                     const innerDesc = btn.dataset.innerDesc;
-                    
+
                     openModal(path, name, desc, innerDesc);
                 });
             });
@@ -952,22 +1240,22 @@
 
         function openModal(path, name, desc, innerDesc) {
             const modal = new bootstrap.Modal(document.getElementById('apiModal'));
-            
+
             document.getElementById('modalTitle').textContent = name;
             document.getElementById('modalDesc').textContent = desc;
             document.getElementById('endpointBox').style.display = 'none';
             document.getElementById('paramsContainer').innerHTML = '';
             document.getElementById('responseContainer').innerHTML = '';
             document.getElementById('submitBtn').style.display = 'none';
-            
+
             const baseUrl = window.location.origin + path;
             const urlParts = path.split('?');
             const params = new URLSearchParams(urlParts[1] || '');
             const hasParams = Array.from(params.keys()).length > 0;
-            
+
             if (hasParams) {
                 const paramsContainer = document.getElementById('paramsContainer');
-                
+
                 Array.from(params.keys()).forEach(param => {
                     const input = document.createElement('input');
                     input.type = 'text';
@@ -977,18 +1265,18 @@
                     input.required = true;
                     paramsContainer.appendChild(input);
                 });
-                
+
                 if (innerDesc) {
                     const descDiv = document.createElement('div');
                     descDiv.className = 'inner-desc';
                     descDiv.innerHTML = innerDesc.replace(/\n/g, '<br>');
                     paramsContainer.appendChild(descDiv);
                 }
-                
+
                 const submitBtn = document.getElementById('submitBtn');
                 submitBtn.style.display = 'block';
                 submitBtn.disabled = true;
-                
+
                 paramsContainer.querySelectorAll('.param-input').forEach(input => {
                     input.addEventListener('input', () => {
                         const allInputs = paramsContainer.querySelectorAll('.param-input');
@@ -996,12 +1284,12 @@
                         submitBtn.disabled = !allFilled;
                     });
                 });
-                
+
                 submitBtn.onclick = () => {
                     const inputs = paramsContainer.querySelectorAll('.param-input');
                     const newParams = new URLSearchParams();
                     let isValid = true;
-                    
+
                     inputs.forEach(input => {
                         if (!input.value.trim()) {
                             isValid = false;
@@ -1011,9 +1299,9 @@
                             newParams.append(input.dataset.param, input.value.trim());
                         }
                     });
-                    
+
                     if (!isValid) return;
-                    
+
                     const fullUrl = `${window.location.origin}${urlParts[0]}?${newParams.toString()}`;
                     paramsContainer.innerHTML = '';
                     submitBtn.style.display = 'none';
@@ -1022,7 +1310,7 @@
             } else {
                 makeApiRequest(baseUrl);
             }
-            
+
             modal.show();
         }
 
@@ -1030,25 +1318,25 @@
             const endpointBox = document.getElementById('endpointBox');
             const loadingContainer = document.getElementById('loadingContainer');
             const responseContainer = document.getElementById('responseContainer');
-            
+
             endpointBox.textContent = url;
             endpointBox.style.display = 'block';
             loadingContainer.style.display = 'block';
             responseContainer.innerHTML = '';
-            
+
             try {
                 const response = await fetch(url);
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                
+
                 const contentType = response.headers.get('Content-Type');
-                
+
                 if (contentType && contentType.startsWith('image/')) {
                     const blob = await response.blob();
                     const imageUrl = URL.createObjectURL(blob);
-                    
+
                     const img = document.createElement('img');
                     img.src = imageUrl;
                     img.className = 'response-image';
@@ -1073,11 +1361,11 @@
 
         function formatUptime(seconds) {
             if (!seconds) return 'N/A';
-            
+
             const days = Math.floor(seconds / 86400);
             const hours = Math.floor((seconds % 86400) / 3600);
             const minutes = Math.floor((seconds % 3600) / 60);
-            
+
             if (days > 0) return `${days}d ${hours}h`;
             if (hours > 0) return `${hours}h ${minutes}m`;
             return `${minutes}m`;
