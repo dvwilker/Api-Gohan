@@ -20,23 +20,15 @@ module.exports = function(app) {
             }
 
             const imageFile = req.files.image;
+            const scale = req.query.scale || '2';
             
-            if (imageFile.size > 10 * 1024 * 1024) {
-                return res.status(400).json({
-                    status: false,
-                    creator: 'DVWILKER',
-                    error: 'Image too large',
-                    message: 'La imagen no puede superar los 10MB'
-                });
-            }
-
-            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
             if (!allowedTypes.includes(imageFile.mimetype)) {
                 return res.status(400).json({
                     status: false,
                     creator: 'DVWILKER',
                     error: 'Invalid format',
-                    message: 'Solo se aceptan JPG, PNG o WEBP'
+                    message: 'Solo se aceptan imágenes JPG o PNG'
                 });
             }
 
@@ -45,18 +37,24 @@ module.exports = function(app) {
                 filename: imageFile.name,
                 contentType: imageFile.mimetype
             });
+            form.append('scale', scale);
 
-            const response = await axios.post('https://api.deepai.org/api/torch-srgan', form, {
-                headers: form.getHeaders(),
-                timeout: 30000
+            const response = await axios.post('https://api2.pixelcut.app/image/upscale/v1', form, {
+                headers: {
+                    ...form.getHeaders(),
+                    'accept': 'application/json',
+                    'x-client-version': 'web',
+                    'x-locale': 'es'
+                },
+                timeout: 60000
             });
 
-            if (!response.data || !response.data.output_url) {
-                throw new Error('No se pudo mejorar la imagen');
+            if (!response.data || !response.data.result_url) {
+                throw new Error('No se pudo obtener la imagen mejorada');
             }
 
             if (req.query.download === 'true') {
-                const imageResponse = await axios.get(response.data.output_url, {
+                const imageResponse = await axios.get(response.data.result_url, {
                     responseType: 'arraybuffer'
                 });
                 res.setHeader('Content-Type', 'image/jpeg');
@@ -70,9 +68,9 @@ module.exports = function(app) {
                 result: {
                     original_name: imageFile.name,
                     original_size: imageFile.size,
-                    original_size_mb: (imageFile.size / (1024 * 1024)).toFixed(2),
-                    enhanced_url: response.data.output_url,
-                    message: 'Imagen mejorada a HD'
+                    scale: scale + 'x',
+                    enhanced_url: response.data.result_url,
+                    message: 'Imagen mejorada exitosamente'
                 }
             });
 
