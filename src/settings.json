@@ -87,6 +87,17 @@
           "innerDesc": "📘 Download videos from Facebook\n\nParameters:\n• url - Facebook post URL\n• cookie - Facebook cookie (opcional)\n• useragent - Custom user agent (opcional)\n• download=true - Descarga directa"
         }
       ]
+    },
+    {
+      "name": "🛠️ Tools",
+      "items": [
+        {
+          "name": "Image HD Enhancer",
+          "desc": "Enhance image quality to HD using AI",
+          "path": "/tools/image-hd",
+          "innerDesc": "🖼️ Mejora la calidad de tus imágenes a HD con IA\n\nMétodo: POST\nFormato: multipart/form-data\nParámetro: image (el archivo)\nLímite: 10MB\nFormatos: JPG, PNG, WEBP\n\nEjemplo:\ncurl -X POST -F \"image=@foto.jpg\" /tools/image-hd"
+        }
+      ]
     }
   ]
 }
