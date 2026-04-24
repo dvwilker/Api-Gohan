@@ -188,6 +188,154 @@
             background: #c0392b;
         }
 
+        /* Login/Register Styles */
+        .auth-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 20000;
+        }
+
+        .auth-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 450px;
+            width: 100%;
+            overflow: hidden;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-header {
+            background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .auth-header h2 {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .auth-header p {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .auth-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e5e5e5;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+        }
+
+        .switch-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .switch-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .password-strength {
+            margin-top: 5px;
+            font-size: 12px;
+        }
+        .strength-weak { color: #dc3545; }
+        .strength-medium { color: #ffc107; }
+        .strength-strong { color: #28a745; }
+
         /* Top Bar */
         .top-bar {
             position: fixed;
@@ -246,11 +394,7 @@
         .menu-toggle.active span:nth-child(1) {
             transform: rotate(45deg) translate(5px, 5px);
         }
-
-        .menu-toggle.active span:nth-child(2) {
-            opacity: 0;
-        }
-
+        .menu-toggle.active span:nth-child(2) { opacity: 0; }
         .menu-toggle.active span:nth-child(3) {
             transform: rotate(-45deg) translate(7px, -6px);
         }
@@ -265,6 +409,56 @@
             display: flex;
             align-items: center;
             gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #f5f5f5;
+            padding: 6px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: #e5e5e5;
+        }
+
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #2c2c2c;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #e5e5e5;
+            color: #dc3545;
         }
 
         .top-links {
@@ -407,6 +601,15 @@
             font-size: 18px;
             color: #666;
             margin-bottom: 40px;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            margin-top: 30px;
+            text-align: center;
         }
 
         /* Status Page */
@@ -712,6 +915,63 @@
                 right: 10px;
             }
         }
+
+        /* Profile Modal */
+        .avatar-options {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .avatar-option {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            object-fit: cover;
+        }
+
+        .avatar-option:hover {
+            transform: scale(1.1);
+        }
+
+        .avatar-option.selected {
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px #667eea;
+        }
+
+        .profile-preview {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-preview-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 3px solid #667eea;
+        }
+
+        .upload-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background: #5a67d8;
+        }
     </style>
 </head>
 <body>
@@ -749,42 +1009,153 @@
 
     <audio id="audioPlayer" style="display: none;"></audio>
 
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="top-bar-left">
-            <button class="menu-toggle" id="menuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <div class="api-name" id="apiName"></div>
-        </div>
-        <div class="top-bar-right">
-            <div class="top-links" id="topLinks"></div>
+    <!-- Pantalla de Login/Registro -->
+    <div id="authContainer" class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>API GOHAN</h2>
+                <p id="authSubtitle">Iniciar sesión</p>
+            </div>
+            <div class="auth-body">
+                <div id="authError" class="error-message"></div>
+                <div id="authSuccess" class="success-message"></div>
+
+                <div id="loginForm">
+                    <div class="form-group">
+                        <label>Correo electrónico</label>
+                        <input type="email" class="form-control" id="loginEmail" placeholder="tucorreo@ejemplo.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="password" class="form-control" id="loginPassword" placeholder="••••••••">
+                    </div>
+                    <button class="btn-auth" id="doLoginBtn">Iniciar sesión</button>
+                    <div class="switch-link">
+                        ¿No tienes cuenta? <a id="showRegisterLink">Crear cuenta</a>
+                    </div>
+                </div>
+
+                <div id="registerForm" style="display: none;">
+                    <div class="form-group">
+                        <label>Nombre completo</label>
+                        <input type="text" class="form-control" id="regFullName" placeholder="Tu nombre completo">
+                    </div>
+                    <div class="form-group">
+                        <label>Correo electrónico</label>
+                        <input type="email" class="form-control" id="regEmail" placeholder="tucorreo@ejemplo.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="password" class="form-control" id="regPassword" placeholder="••••••••">
+                        <div class="password-strength" id="passwordStrength"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmar contraseña</label>
+                        <input type="password" class="form-control" id="regConfirmPassword" placeholder="••••••••">
+                    </div>
+                    <button class="btn-auth" id="doRegisterBtn">Crear cuenta</button>
+                    <div class="switch-link">
+                        ¿Ya tienes cuenta? <a id="showLoginLink">Iniciar sesión</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Sidebar -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-nav">
-            <div class="sidebar-item active" data-page="home">Home</div>
-            <div class="sidebar-item" data-page="status">Status</div>
-            <div class="sidebar-category">Categories</div>
-            <div id="categoriesNav"></div>
-            <div class="sidebar-item" data-page="all">All Endpoints</div>
+    <!-- Dashboard de la API (oculto hasta login) -->
+    <div id="dashboardContainer" style="display: none;">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="top-bar-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="api-name" id="apiName"></div>
+            </div>
+            <div class="top-bar-right">
+                <div class="user-info" id="userInfoBtn">
+                    <div class="user-avatar" id="userAvatar">👤</div>
+                    <span class="user-name" id="userNameDisplay"></span>
+                    <button class="logout-btn" id="logoutBtn">Cerrar sesión</button>
+                </div>
+                <div class="top-links" id="topLinks"></div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-nav">
+                <div class="sidebar-item active" data-page="home">Home</div>
+                <div class="sidebar-item" data-page="status">Status</div>
+                <div class="sidebar-category">Categories</div>
+                <div id="categoriesNav"></div>
+                <div class="sidebar-item" data-page="all">All Endpoints</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent"></div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p id="footerText"></p>
         </div>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content" id="mainContent"></div>
-
-    <!-- Footer -->
-    <div class="footer">
-        <p id="footerText"></p>
+    <!-- Modal para editar perfil -->
+    <div class="modal fade" id="profileModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="profile-preview">
+                        <img class="profile-preview-img" id="profilePreview" src="" alt="Avatar">
+                        <h5 id="previewName"></h5>
+                        <p id="previewEmail"></p>
+                        <div>
+                            <input type="file" id="uploadPhoto" accept="image/*" style="display: none;">
+                            <button class="upload-btn" id="uploadPhotoBtn">📷 Subir foto de galería</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre completo</label>
+                        <input type="text" class="form-control" id="editFullName">
+                    </div>
+                    <div class="form-group">
+                        <label>Nueva contraseña (dejar vacío para no cambiar)</label>
+                        <input type="password" class="form-control" id="editPassword" placeholder="••••••••">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmar nueva contraseña</label>
+                        <input type="password" class="form-control" id="editConfirmPassword" placeholder="••••••••">
+                    </div>
+                    <label>O selecciona un avatar predeterminado</label>
+                    <div class="avatar-options" id="avatarOptions">
+                        <img class="avatar-option" data-avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=1" src="https://api.dicebear.com/7.x/avataaars/svg?seed=1">
+                        <img class="avatar-option" data-avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=2" src="https://api.dicebear.com/7.x/avataaars/svg?seed=2">
+                        <img class="avatar-option" data-avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=3" src="https://api.dicebear.com/7.x/avataaars/svg?seed=3">
+                        <img class="avatar-option" data-avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=4" src="https://api.dicebear.com/7.x/avataaars/svg?seed=4">
+                        <img class="avatar-option" data-avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=5" src="https://api.dicebear.com/7.x/avataaars/svg?seed=5">
+                        <img class="avatar-option" data-avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=6" src="https://api.dicebear.com/7.x/avataaars/svg?seed=6">
+                        <img class="avatar-option" data-avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=7" src="https://api.dicebear.com/7.x/avataaars/svg?seed=7">
+                        <img class="avatar-option" data-avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=8" src="https://api.dicebear.com/7.x/avataaars/svg?seed=8">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" id="saveProfileBtn">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal para endpoints -->
     <div class="modal fade" id="apiModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
@@ -931,27 +1302,305 @@
         // Cargar primera canción
         loadSong(0);
 
-        // ============ API DASHBOARD ORIGINAL ============
+        // ============ SISTEMA DE AUTENTICACIÓN ============
+        let currentUser = null;
         let settings = {};
         let currentPage = 'home';
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            await loadSettings();
-            initializeUI();
-            renderPage('home');
-            hideLoading();
+        // Verificar si hay sesión guardada
+        async function checkSession() {
+            const savedUser = localStorage.getItem('api_gohan_current_user');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showDashboard();
+            } else {
+                showAuth();
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'block';
+            updateUserDisplay();
+            loadSettings();
+        }
+
+        function updateUserDisplay() {
+            document.getElementById('userNameDisplay').textContent = currentUser.fullName;
+            const avatarEl = document.getElementById('userAvatar');
+            if (currentUser.avatar && (currentUser.avatar.startsWith('http') || currentUser.avatar.startsWith('data:'))) {
+                avatarEl.innerHTML = `<img src="${currentUser.avatar}" style="width:30px;height:30px;border-radius:50%;object-fit:cover;">`;
+            } else {
+                avatarEl.innerHTML = currentUser.fullName.charAt(0).toUpperCase();
+                avatarEl.style.background = '#667eea';
+                avatarEl.style.display = 'flex';
+                avatarEl.style.alignItems = 'center';
+                avatarEl.style.justifyContent = 'center';
+            }
+        }
+
+        function showAuth() {
+            document.getElementById('authContainer').style.display = 'flex';
+            document.getElementById('dashboardContainer').style.display = 'none';
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        function logout() {
+            localStorage.removeItem('api_gohan_current_user');
+            currentUser = null;
+            showAuth();
+        }
+
+        async function registerUser() {
+            const fullName = document.getElementById('regFullName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+            const errorDiv = document.getElementById('authError');
+            const successDiv = document.getElementById('authSuccess');
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+
+            if (!fullName || !email || !password) {
+                errorDiv.textContent = 'Por favor completa todos los campos';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                errorDiv.textContent = 'Correo electrónico inválido';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            if (password.length < 6) {
+                errorDiv.textContent = 'La contraseña debe tener al menos 6 caracteres';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                errorDiv.textContent = 'Las contraseñas no coinciden';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fullName, email, password })
+                });
+                const data = await response.json();
+
+                if (data.status === 200) {
+                    successDiv.textContent = '¡Cuenta creada! Ahora inicia sesión';
+                    successDiv.style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('regFullName').value = '';
+                        document.getElementById('regEmail').value = '';
+                        document.getElementById('regPassword').value = '';
+                        document.getElementById('regConfirmPassword').value = '';
+                        showLoginForm();
+                        successDiv.style.display = 'none';
+                    }, 2000);
+                } else {
+                    errorDiv.textContent = data.message || 'Error al registrar';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Error de conexión';
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        async function loginUser() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            const errorDiv = document.getElementById('authError');
+            errorDiv.style.display = 'none';
+
+            if (!email || !password) {
+                errorDiv.textContent = 'Ingresa tu correo y contraseña';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await response.json();
+
+                if (data.status === 200) {
+                    currentUser = data.user;
+                    localStorage.setItem('api_gohan_current_user', JSON.stringify(currentUser));
+                    showDashboard();
+                } else {
+                    errorDiv.textContent = data.message || 'Correo o contraseña incorrectos';
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = 'Error de conexión';
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        function showRegisterForm() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+            document.getElementById('authSubtitle').textContent = 'Crear cuenta';
+        }
+
+        function showLoginForm() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('authSubtitle').textContent = 'Iniciar sesión';
+        }
+
+        document.getElementById('regPassword')?.addEventListener('input', function() {
+            const password = this.value;
+            const strengthDiv = document.getElementById('passwordStrength');
+            if (password.length === 0) {
+                strengthDiv.innerHTML = '';
+                return;
+            }
+            let strength = 0;
+            if (password.length >= 6) strength++;
+            if (password.length >= 10) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+            let text = '', classname = '';
+            if (strength <= 2) { text = 'Débil'; classname = 'strength-weak'; }
+            else if (strength <= 4) { text = 'Media'; classname = 'strength-medium'; }
+            else { text = 'Fuerte'; classname = 'strength-strong'; }
+            strengthDiv.innerHTML = `Fortaleza: <span class="${classname}">${text}</span>`;
         });
 
+        // ============ PERFIL CON SUBIDA DE FOTO ============
+        async function openProfileModal() {
+            const modal = new bootstrap.Modal(document.getElementById('profileModal'));
+            document.getElementById('editFullName').value = currentUser.fullName;
+            document.getElementById('editPassword').value = '';
+            document.getElementById('editConfirmPassword').value = '';
+            document.getElementById('profilePreview').src = currentUser.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUser.id}`;
+            document.getElementById('previewName').textContent = currentUser.fullName;
+            document.getElementById('previewEmail').textContent = currentUser.email;
+
+            document.querySelectorAll('.avatar-option').forEach(opt => {
+                opt.classList.remove('selected');
+                if (opt.dataset.avatar === currentUser.avatar) {
+                    opt.classList.add('selected');
+                }
+                opt.onclick = () => {
+                    document.querySelectorAll('.avatar-option').forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                    document.getElementById('profilePreview').src = opt.dataset.avatar;
+                };
+            });
+
+            modal.show();
+        }
+
+        document.getElementById('uploadPhotoBtn')?.addEventListener('click', () => {
+            document.getElementById('uploadPhoto').click();
+        });
+
+        document.getElementById('uploadPhoto')?.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const imgData = event.target.result;
+                    document.getElementById('profilePreview').src = imgData;
+                    document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        async function saveProfile() {
+            const newName = document.getElementById('editFullName').value.trim();
+            const newPassword = document.getElementById('editPassword').value;
+            const confirmPassword = document.getElementById('editConfirmPassword').value;
+            
+            const uploadPhoto = document.getElementById('uploadPhoto').files[0];
+            let selectedAvatar = document.querySelector('.avatar-option.selected')?.dataset.avatar || currentUser.avatar;
+            
+            if (uploadPhoto) {
+                const reader = new FileReader();
+                reader.onload = async function(event) {
+                    const imgData = event.target.result;
+                    await saveProfileData(newName, newPassword, confirmPassword, imgData);
+                };
+                reader.readAsDataURL(uploadPhoto);
+            } else {
+                await saveProfileData(newName, newPassword, confirmPassword, selectedAvatar);
+            }
+        }
+
+        async function saveProfileData(newName, newPassword, confirmPassword, avatar) {
+            if (!newName) {
+                alert('El nombre no puede estar vacío');
+                return;
+            }
+
+            if (newPassword && newPassword !== confirmPassword) {
+                alert('Las contraseñas no coinciden');
+                return;
+            }
+
+            if (newPassword && newPassword.length < 6) {
+                alert('La contraseña debe tener al menos 6 caracteres');
+                return;
+            }
+
+            try {
+                const updates = { fullName: newName, avatar: avatar };
+                if (newPassword) updates.password = newPassword;
+
+                const response = await fetch(`/api/profile/${currentUser.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updates)
+                });
+                const data = await response.json();
+
+                if (data.status === 200) {
+                    currentUser = data.user;
+                    localStorage.setItem('api_gohan_current_user', JSON.stringify(currentUser));
+                    updateUserDisplay();
+                    bootstrap.Modal.getInstance(document.getElementById('profileModal')).hide();
+                    alert('Perfil actualizado correctamente');
+                } else {
+                    alert(data.message || 'Error al actualizar');
+                }
+            } catch (error) {
+                alert('Error de conexión');
+            }
+        }
+
+        document.getElementById('userInfoBtn')?.addEventListener('click', openProfileModal);
+        document.getElementById('saveProfileBtn')?.addEventListener('click', saveProfile);
+
+        // ============ API DASHBOARD ORIGINAL (sin cambios) ============
         async function loadSettings() {
             try {
                 const response = await fetch('/src/settings.json');
                 settings = await response.json();
 
-                document.getElementById('pageTitle').textContent = settings.name || 'API';
-                document.getElementById('apiName').textContent = settings.name || 'API';
-                document.getElementById('footerText').textContent = `Created by ${settings.apiSettings?.creator || 'Unknown'}`;
+                document.getElementById('pageTitle').textContent = settings.name || 'API GOHAN';
+                document.getElementById('apiName').textContent = settings.name || 'API GOHAN';
+                document.getElementById('footerText').textContent = `Created by ${settings.apiSettings?.creator || 'DV WILKER'}`;
 
-                // Top links
                 const topLinksContainer = document.getElementById('topLinks');
                 if (settings.links && settings.links.length > 0) {
                     settings.links.forEach(link => {
@@ -970,7 +1619,6 @@
                     });
                 }
 
-                // Categories navigation
                 const categoriesNav = document.getElementById('categoriesNav');
                 if (settings.categories) {
                     settings.categories.forEach(category => {
@@ -985,10 +1633,13 @@
             } catch (error) {
                 console.error('Error loading settings:', error);
             }
+
+            initializeUI();
+            renderPage('home');
+            hideLoading();
         }
 
         function initializeUI() {
-            // Menu toggle
             const menuToggle = document.getElementById('menuToggle');
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
@@ -1005,7 +1656,6 @@
                 overlay.classList.remove('active');
             });
 
-            // Sidebar navigation
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const page = item.dataset.page;
@@ -1026,7 +1676,6 @@
                 });
             });
 
-            // Scroll effect
             window.addEventListener('scroll', () => {
                 const topBar = document.querySelector('.top-bar');
                 if (window.scrollY > 0) {
@@ -1035,6 +1684,8 @@
                     topBar.classList.remove('scrolled');
                 }
             });
+
+            document.getElementById('logoutBtn').addEventListener('click', logout);
         }
 
         function renderPage(page, category = null) {
@@ -1058,16 +1709,20 @@
         }
 
         function renderHomePage(container) {
-            const imageSrc = Array.isArray(settings.header.imageSrc) && settings.header.imageSrc.length > 0
+            const imageSrc = Array.isArray(settings.header?.imageSrc) && settings.header.imageSrc.length > 0
                 ? settings.header.imageSrc[Math.floor(Math.random() * settings.header.imageSrc.length)]
                 : '';
 
             container.innerHTML = `
                 <div class="home-banner">
-                    ${imageSrc ? `<img src="${imageSrc}" alt="${settings.name}" style="max-width: ${settings.header.imageSize?.desktop || '40%'}">` : ''}
-                    <h1 class="home-title">${settings.name || 'API'}</h1>
+                    ${imageSrc ? `<img src="${imageSrc}" alt="${settings.name}" style="max-width: ${settings.header?.imageSize?.desktop || '40%'}">` : ''}
+                    <h1 class="home-title">${settings.name || 'API GOHAN'}</h1>
                     <div class="home-version">${settings.version || 'v1.0'}</div>
                     <p class="home-description">${settings.description || 'API Documentation'}</p>
+                    <div class="welcome-card">
+                        <h3>👋 Bienvenido, ${currentUser.fullName}!</h3>
+                        <p>Has iniciado sesión correctamente en API GOHAN</p>
+                    </div>
                 </div>
             `;
         }
@@ -1095,7 +1750,7 @@
                             <div class="status-card-value">${data.total_requests || 0}</div>
                         </div>
                         <div class="status-card">
-                            <div class="status-card-title">Active Users</div>
+                            <div class="status-card-title>Active Users</div>
                             <div class="status-card-value">${data.active_users || 0}</div>
                         </div>
                         <div class="status-card">
@@ -1141,7 +1796,7 @@
         }
 
         function renderCategoryPage(container, categoryName) {
-            const category = settings.categories.find(c => c.name === categoryName);
+            const category = settings.categories?.find(c => c.name === categoryName);
             if (!category) return;
 
             const sortedItems = [...category.items].sort((a, b) => a.name.localeCompare(b.name));
@@ -1171,18 +1826,20 @@
             `;
 
             const allCategories = document.getElementById('allCategories');
-            settings.categories.forEach(category => {
-                const sortedItems = [...category.items].sort((a, b) => a.name.localeCompare(b.name));
+            if (settings.categories) {
+                settings.categories.forEach(category => {
+                    const sortedItems = [...category.items].sort((a, b) => a.name.localeCompare(b.name));
 
-                allCategories.innerHTML += `
-                    <div class="category-section" data-category="${category.name}">
-                        <h2 class="category-title">${category.name}</h2>
-                        <div class="endpoints-grid">
-                            ${sortedItems.map(item => createEndpointCard(item)).join('')}
+                    allCategories.innerHTML += `
+                        <div class="category-section" data-category="${category.name}">
+                            <h2 class="category-title">${category.name}</h2>
+                            <div class="endpoints-grid">
+                                ${sortedItems.map(item => createEndpointCard(item)).join('')}
+                            </div>
                         </div>
-                    </div>
-                `;
-            });
+                    `;
+                });
+            }
 
             setupSearch();
             setupEndpointButtons();
@@ -1361,11 +2018,9 @@
 
         function formatUptime(seconds) {
             if (!seconds) return 'N/A';
-
             const days = Math.floor(seconds / 86400);
             const hours = Math.floor((seconds % 86400) / 3600);
             const minutes = Math.floor((seconds % 3600) / 60);
-
             if (days > 0) return `${days}d ${hours}h`;
             if (hours > 0) return `${hours}h ${minutes}m`;
             return `${minutes}m`;
@@ -1379,6 +2034,13 @@
                 document.body.classList.remove('no-scroll');
             }, 500);
         }
+
+        document.getElementById('doLoginBtn')?.addEventListener('click', loginUser);
+        document.getElementById('doRegisterBtn')?.addEventListener('click', registerUser);
+        document.getElementById('showRegisterLink')?.addEventListener('click', showRegisterForm);
+        document.getElementById('showLoginLink')?.addEventListener('click', showLoginForm);
+
+        checkSession();
     </script>
 </body>
 </html>
