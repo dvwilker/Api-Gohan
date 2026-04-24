@@ -6,9 +6,15 @@ const path = require('path')
 const os = require('os')
 const si = require('systeminformation')
 const axios = require('axios')
+const { createClient } = require('@supabase/supabase-js')
 
 const app = express()
 const PORT = process.env.PORT || 10005
+
+// ============ SUPABASE CONFIGURACIÓN ============
+const supabaseUrl = 'https://gcuvinttyjiahpzpfer.supabase.co'
+const supabaseAnonKey = 'sb_publishable_RheK_MsEe-YffOuR9XMmjQ_Mpcutq1o'
+const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 app.enable("trust proxy")
 app.set("json spaces", 2)
@@ -51,7 +57,7 @@ app.use((req, res, next) => {
         if (data && typeof data === 'object') {
             const responseData = {
                 status: data.status,
-                creator: settings.apiSettings.creator || "SoyMaycol",
+                creator: settings.apiSettings.creator || "DV WILKER",
                 ...data
             }
             return originalJson.call(this, responseData)
@@ -61,25 +67,147 @@ app.use((req, res, next) => {
     next()
 })
 
+// ============ ENDPOINTS DE AUTENTICACIÓN ============
+
+// REGISTRO
+app.post('/api/register', async (req, res) => {
+    const { fullName, email, password } = req.body
+    
+    if (!fullName || !email || !password) {
+        return res.status(400).json({ status: 400, message: "Faltan campos" })
+    }
+    
+    const { data: existing } = await supabase
+        .from('usuarios')
+        .select('email')
+        .eq('email', email)
+        .single()
+    
+    if (existing) {
+        return res.status(400).json({ status: 400, message: "Email ya registrado" })
+    }
+    
+    const newUser = {
+        id: Date.now(),
+        fullName: fullName,
+        email: email,
+        password: password,
+        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${Date.now()}`,
+        createdAt: new Date().toISOString()
+    }
+    
+    const { data, error } = await supabase
+        .from('usuarios')
+        .insert([newUser])
+        .select()
+    
+    if (error) {
+        return res.status(500).json({ status: 500, message: error.message })
+    }
+    
+    res.json({
+        status: 200,
+        message: "Usuario registrado exitosamente",
+        user: data[0]
+    })
+})
+
+// LOGIN
+app.post('/api/login', async (req, res) => {
+    const { email, password } = req.body
+    
+    if (!email || !password) {
+        return res.status(400).json({ status: 400, message: "Faltan campos" })
+    }
+    
+    const { data: user, error } = await supabase
+        .from('usuarios')
+        .select('*')
+        .eq('email', email)
+        .eq('password', password)
+        .single()
+    
+    if (error || !user) {
+        return res.status(401).json({ status: 401, message: "Correo o contraseña incorrectos" })
+    }
+    
+    res.json({
+        status: 200,
+        message: "Login exitoso",
+        user: user
+    })
+})
+
+// OBTENER PERFIL
+app.get('/api/profile/:id', async (req, res) => {
+    const { id } = req.params
+    
+    const { data: user, error } = await supabase
+        .from('usuarios')
+        .select('*')
+        .eq('id', id)
+        .single()
+    
+    if (error || !user) {
+        return res.status(404).json({ status: 404, message: "Usuario no encontrado" })
+    }
+    
+    res.json({
+        status: 200,
+        user: user
+    })
+})
+
+// ACTUALIZAR PERFIL
+app.put('/api/profile/:id', async (req, res) => {
+    const { id } = req.params
+    const { fullName, password, avatar } = req.body
+    
+    const updates = {}
+    if (fullName) updates.fullName = fullName
+    if (password) updates.password = password
+    if (avatar) updates.avatar = avatar
+    
+    const { data, error } = await supabase
+        .from('usuarios')
+        .update(updates)
+        .eq('id', id)
+        .select()
+    
+    if (error) {
+        return res.status(500).json({ status: 500, message: error.message })
+    }
+    
+    res.json({
+        status: 200,
+        message: "Perfil actualizado",
+        user: data[0]
+    })
+})
+
+// ============ CARGAR RUTAS DE LA API ============
 let totalRoutes = 0
 const apiFolder = path.join(__dirname, './src/api')
-fs.readdirSync(apiFolder).forEach((subfolder) => {
-    const subfolderPath = path.join(apiFolder, subfolder)
-    if (fs.statSync(subfolderPath).isDirectory()) {
-        fs.readdirSync(subfolderPath).forEach((file) => {
-            const filePath = path.join(subfolderPath, file)
-            if (path.extname(file) === '.js') {
-                require(filePath)(app)
-                totalRoutes++
-                console.log(chalk.bgHex('#FFFF99').hex('#333').bold(` Loaded Route: ${path.basename(file)} `))
-            }
-        })
-    }
-})
+if (fs.existsSync(apiFolder)) {
+    fs.readdirSync(apiFolder).forEach((subfolder) => {
+        const subfolderPath = path.join(apiFolder, subfolder)
+        if (fs.statSync(subfolderPath).isDirectory()) {
+            fs.readdirSync(subfolderPath).forEach((file) => {
+                const filePath = path.join(subfolderPath, file)
+                if (path.extname(file) === '.js') {
+                    require(filePath)(app)
+                    totalRoutes++
+                    console.log(chalk.bgHex('#FFFF99').hex('#333').bold(` Loaded Route: ${path.basename(file)} `))
+                }
+            })
+        }
+    })
+}
 
 console.log(chalk.bgHex('#90EE90').hex('#333').bold(' Load Complete! ✓ '))
 console.log(chalk.bgHex('#90EE90').hex('#333').bold(` Total Routes Loaded: ${totalRoutes} `))
 
+// ============ ENDPOINT STATUS (sin cambios) ============
 app.get('/status', async (req, res) => {
     const start = Date.now()
     const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress || 'unknown'
