@@ -56,6 +56,12 @@
           "name": "YouTube",
           "desc": "Video search",
           "path": "/search/youtube?q="
+        },
+        {
+          "name": "TikTok",
+          "desc": "TikTok video search",
+          "path": "/search/tiktok?q=",
+          "innerDesc": "🔎 Busca videos en TikTok\n\nUsage: ?q=SEARCH_QUERY\nOpcional: &limit=20 (máx 50)\n\nEjemplo:\n/search/tiktok?q=musica"
         }
       ]
     },
